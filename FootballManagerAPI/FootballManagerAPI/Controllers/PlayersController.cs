@@ -1,34 +1,33 @@
-﻿using FootballManagerAPI.Controllers.Models;
-using Microsoft.AspNetCore.Http;
+﻿using FootballManagerAPI.Controllers.Entities;
+using FootballManagerAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace FootballManagerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FootballManagerController : ControllerBase
+    public class PlayersController : ControllerBase
     {
-        private static List<FootballPlayer> players = new List<FootballPlayer>()
-        {
-                new FootballPlayer(1, "Maksym", "Volokh", 18),
-                new FootballPlayer(2, "Gena", "Kruglov", 16),
-                new FootballPlayer(3, "Denis", "Guja", 22),
-        };
 
+        private readonly DataContext _context;
+        public PlayersController(DataContext context)
+        {
+            _context = context;
+        }
 
         [HttpGet]
         public ActionResult<List<FootballPlayer>> Get()
         {
-                return Ok(players);
+            return Ok(_context.FootballPlayers);
         }
 
 
         [HttpGet("{id:int}")]
-        public ActionResult<FootballPlayer> GetId(int id)
+        public ActionResult<FootballPlayer> GetPlayerById(int id)
         {
-            var player = players.Find(p => p.Id == id);
+            var player = _context.FootballPlayers.FirstOrDefault(i => i.Id == id);
             if(player == null)
             {
                 return BadRequest("Player is not found!");
@@ -38,9 +37,9 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet("{firstName}/name")]
-        public ActionResult<FootballPlayer> GetFirstName(string firstName)
+        public ActionResult<FootballPlayer> GetPlayerByFirstName(string firstName)
         {
-            var player = players.Find(f => f.FirstName == firstName);
+            var player = _context.FootballPlayers.FirstOrDefault(f => f.FirstName == firstName);
             if (player == null)
             {
                 return BadRequest("Player is not found!");
@@ -50,9 +49,9 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet("{lastName}")]
-        public ActionResult<FootballPlayer> GetLastName(string lastName)
+        public ActionResult<FootballPlayer> GetPlayerByLastName(string lastName)
         {
-            var player = players.Find(l => l.LastName == lastName);
+            var player = _context.FootballPlayers.FirstOrDefault(l => l.LastName == lastName);
             if (player == null)
             {
                 return BadRequest("Player is not found!");
@@ -64,15 +63,15 @@ namespace FootballManagerAPI.Controllers
         [HttpPost]
         public ActionResult<List<FootballPlayer>> AddFootballPlayer(FootballPlayer player)
         {
-                players.Add(player);
-                return Ok(players);
+                _context.FootballPlayers.Add(player);
+                return Ok(_context.FootballPlayers);
         }
 
 
         [HttpPut]
         public ActionResult<FootballPlayer> UpdatePlayer(FootballPlayer request)
         {
-            var player = players.Find(r => r.Id == request.Id);
+            var player = _context.FootballPlayers.FirstOrDefault(r => r.Id == request.Id);
             if (player == null)
             {
                 return BadRequest("Player is not found!");
@@ -82,20 +81,20 @@ namespace FootballManagerAPI.Controllers
             player.LastName = request.LastName;
             player.Number = request.Number;
 
-            return Ok(players);
+            return Ok(_context.FootballPlayers);
         }
 
 
         [HttpDelete]
         public ActionResult<FootballPlayer> Delete(int id)
         {
-            var player = players.Find(d => d.Id == id);
+            var player = _context.FootballPlayers.FirstOrDefault(i => i.Id == id);
             if (player == null)
             {
                 return BadRequest("Player is not found!");
             }
-            players.Remove(player);
-            return Ok(players);
+            _context.FootballPlayers.Remove(player);
+            return Ok(_context.FootballPlayers);
         }
 
     }

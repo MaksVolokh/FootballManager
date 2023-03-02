@@ -1,4 +1,4 @@
-﻿namespace FootballManagerAPI.Controllers.Models
+﻿namespace FootballManagerAPI.Controllers.Entities
 {
     public class FootballPlayer
     {
