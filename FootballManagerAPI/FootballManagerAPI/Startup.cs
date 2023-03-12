@@ -8,8 +8,13 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Builder;
 using FootballManagerAPI.Data;
 using Microsoft.EntityFrameworkCore;
-
-
+using FootballManagerDAL.Interfaces;
+using FootballManagerAPI.Controllers;
+using FootballManagerBLL.Interfaces;
+using FootballManagerBLL.FootballManagerBLL;
+using FootballManagerDAL.Repositories;
+using FootballManagerDAL.Interfaces;
+using FootballManagerDAL.Repositories;
 
 namespace FootballManagerAPI
 {
@@ -32,6 +37,9 @@ namespace FootballManagerAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FootballManagerAPI", Version = "v1" });
             });
+            services.AddScoped<IPlayerService, PlayerService>();
+            services.AddScoped<IPlayersRepository, PlayerRepository>();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

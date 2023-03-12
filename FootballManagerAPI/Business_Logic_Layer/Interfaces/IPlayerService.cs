@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FootballManagerDAL.Interfaces
+namespace FootballManagerBLL.Interfaces
 {
-    public interface IPlayersRepository
+    public interface IPlayerService
     {
         List<FootballPlayer> Get();
         FootballPlayer? GetPlayerById(int id);
@@ -15,7 +15,7 @@ namespace FootballManagerDAL.Interfaces
         List<FootballPlayer> GetPlayerByLastName(string lastName);
         FootballPlayer? AddFootballPlayer(FootballPlayer player);
         FootballPlayer? UpdatePlayer(FootballPlayer request);
-        FootballPlayer? PatchUpdate(FootballPlayer request); 
+        FootballPlayer? PatchUpdate(FootballPlayer request);
         public void Delete(int id);
     }
 }

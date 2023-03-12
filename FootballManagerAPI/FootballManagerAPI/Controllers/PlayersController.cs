@@ -1,6 +1,8 @@
 ﻿using FootballManagerAPI.Controllers.Entities;
 using FootballManagerAPI.Data;
+using FootballManagerBLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,91 +13,112 @@ namespace FootballManagerAPI.Controllers
     public class PlayersController : ControllerBase
     {
 
-        private readonly DataContext _context;
-        public PlayersController(DataContext context)
+        private readonly IPlayerService _service;
+        public PlayersController(IPlayerService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
         public ActionResult<List<FootballPlayer>> Get()
         {
-            return Ok(_context.FootballPlayers);
+            return _service.Get();
         }
 
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}")] 
         public ActionResult<FootballPlayer> GetPlayerById(int id)
         {
-            var player = _context.FootballPlayers.FirstOrDefault(i => i.Id == id);
+            if (id < 0)
+            {
+                return BadRequest("Id should be positive number!");
+            }
+            var player = _service.GetPlayerById(id);
             if(player == null)
             {
-                return BadRequest("Player is not found!");
+                return NotFound("Player is not found!");
             }
-            return Ok(player);
+            return player;
         }
+          
 
-
-        [HttpGet("{firstName}/name")]
-        public ActionResult<FootballPlayer> GetPlayerByFirstName(string firstName)
+        [HttpGet("searchByQuery")]
+        public ActionResult<List<FootballPlayer>> GetPlayerByFirstName([FromQuery] string firstName)
         {
-            var player = _context.FootballPlayers.FirstOrDefault(f => f.FirstName == firstName);
+            if (firstName is not string type)
+            {
+                return BadRequest("First name should be string!");
+            }
+            var player = _service.GetPlayerByFirstName(firstName);
             if (player == null)
             {
-                return BadRequest("Player is not found!");
+                return NotFound("Player is not found!");
             }
             return Ok(player);  
         }
 
 
-        [HttpGet("{lastName}")]
-        public ActionResult<FootballPlayer> GetPlayerByLastName(string lastName)
+        [HttpGet("searchByQuerylN")]
+        public ActionResult<List<FootballPlayer>> GetPlayerByLastName([FromQuery] string lastName)
         {
-            var player = _context.FootballPlayers.FirstOrDefault(l => l.LastName == lastName);
+            if(lastName is not string type)
+            {
+                return BadRequest("Last name should be string!");
+            }
+            var player = _service.GetPlayerByLastName(lastName);
             if (player == null)
             {
-                return BadRequest("Player is not found!");
+                return NotFound("Player is not found!");
             }
             return Ok(player);
         }
+         
+
+        [HttpPost("Add")]
+        public ActionResult<FootballPlayer> AddFootballPlayer(FootballPlayer player)
+        { 
+                _service.AddFootballPlayer(player);
+                return Ok(player);
+        } 
 
 
-        [HttpPost]
-        public ActionResult<List<FootballPlayer>> AddFootballPlayer(FootballPlayer player)
-        {
-                _context.FootballPlayers.Add(player);
-                return Ok(_context.FootballPlayers);
-        }
-
-
-        [HttpPut]
+        [HttpPut("Update")] 
         public ActionResult<FootballPlayer> UpdatePlayer(FootballPlayer request)
+          {
+            if (request.Id < 0)
+            {
+                return BadRequest("Id should be positive number!");
+            }
+            var player = _service.UpdatePlayer(request);
+
+            if (player == null)
+            { 
+                return NotFound("Player is not found!");
+            }
+            return Ok(request);
+        }
+
+        [HttpPatch("PatchUpdate")]
+        public ActionResult<FootballPlayer> PatchUpdate(FootballPlayer requestPatch)
         {
-            var player = _context.FootballPlayers.FirstOrDefault(r => r.Id == request.Id);
+            if (requestPatch.Id < 0)
+            {
+                return BadRequest("Id should be positive number!");
+            }
+            var player = _service.PatchUpdate(requestPatch);
+
             if (player == null)
             {
-                return BadRequest("Player is not found!");
+                return NotFound("Player is not found!");
             }
-            player.Id = request.Id;
-            player.FirstName = request.FirstName;
-            player.LastName = request.LastName;
-            player.Number = request.Number;
-
-            return Ok(_context.FootballPlayers);
+            return Ok(requestPatch);
         }
 
 
-        [HttpDelete]
-        public ActionResult<FootballPlayer> Delete(int id)
+        [HttpDelete("{id:int}")]
+        public void Delete(int id)
         {
-            var player = _context.FootballPlayers.FirstOrDefault(i => i.Id == id);
-            if (player == null)
-            {
-                return BadRequest("Player is not found!");
-            }
-            _context.FootballPlayers.Remove(player);
-            return Ok(_context.FootballPlayers);
-        }
-
+            _service.Delete(id);
+        }         
     }
 }
