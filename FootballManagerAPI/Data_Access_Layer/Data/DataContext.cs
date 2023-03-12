@@ -1,7 +1,6 @@
 ﻿using FootballManagerAPI.Controllers.Entities;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace FootballManagerAPI.Data
 {
     public class DataContext : DbContext

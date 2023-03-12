@@ -2,8 +2,7 @@
 using FootballManagerDAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using FootballManagerAPI.Data;
-using Microsoft.AspNetCore.Mvc;
-using Azure.Core;
+
 
 namespace FootballManagerDAL.Repositories
 {
@@ -24,24 +23,26 @@ namespace FootballManagerDAL.Repositories
         {
 
             FootballPlayer? player = db.FootballPlayers.FirstOrDefault(x => x.Id == id);
+
             if (player == null)
             {
                 return null;
             }
-            return player  ;
+
+            return player;
         }
 
-        
-        public List<FootballPlayer> GetPlayerByFirstName(string firstName)
+        public List<FootballPlayer> GetPlayersByFirstName(string firstName)
         {
             var players = db.FootballPlayers.Where(f => f.FirstName == firstName).ToList();
+
             return players; 
         }
 
-        //If we have several players with the same last name.
-        public List<FootballPlayer> GetPlayerByLastName(string lastName)
+        public List<FootballPlayer> GetPlayersByLastName(string lastName)
         {
             var players = db.FootballPlayers.Where(l => l.LastName == lastName).ToList();
+
             return players;
         }
 
@@ -49,32 +50,39 @@ namespace FootballManagerDAL.Repositories
         {
             db.FootballPlayers.Add(player);
             db.SaveChanges();
+
             return player;
         }
 
         public FootballPlayer? UpdatePlayer(FootballPlayer request)
         {
             var player = db.FootballPlayers.AsNoTracking().FirstOrDefault(r => r.Id == request.Id);
+
             db.FootballPlayers.Update(request);
             db.SaveChanges();
+
             return request;
         }
 
         public FootballPlayer? PatchUpdate(FootballPlayer requestPatch)
         {
             var player = db.FootballPlayers.AsNoTracking().FirstOrDefault(r => r.Id == requestPatch.Id);
+            
             db.FootballPlayers.Update(requestPatch);
             db.SaveChanges();
+
             return requestPatch;
         }
 
         public void Delete(int id)
         {
             FootballPlayer? player = db.FootballPlayers.FirstOrDefault(i => i.Id == id);
+
             if (player != null)
             {
                 db.FootballPlayers.Remove(player);
             }
+
             db.SaveChanges();
         }
     }

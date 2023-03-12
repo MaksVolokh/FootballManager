@@ -1,8 +1,6 @@
 ﻿using FootballManagerAPI.Controllers.Entities;
 using FootballManagerBLL.Interfaces;
 using FootballManagerDAL.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-
 
 namespace FootballManagerBLL.FootballManagerBLL
 {
@@ -25,14 +23,14 @@ namespace FootballManagerBLL.FootballManagerBLL
             return _repository.GetPlayerById(id);
         }
 
-        public List<FootballPlayer> GetPlayerByFirstName(string firstName)
+        public List<FootballPlayer> GetPlayersByFirstName(string firstName)
         {
-            return _repository.GetPlayerByFirstName(firstName);
+            return _repository.GetPlayersByFirstName(firstName);
         }
 
-        public List<FootballPlayer> GetPlayerByLastName(string lastName)
+        public List<FootballPlayer> GetPlayersByLastName(string lastName)
         {
-            return _repository.GetPlayerByLastName(lastName);
+            return _repository.GetPlayersByLastName(lastName);
         }
 
         public FootballPlayer? AddFootballPlayer(FootballPlayer player)
