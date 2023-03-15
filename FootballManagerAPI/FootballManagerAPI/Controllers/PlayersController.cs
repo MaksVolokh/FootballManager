@@ -1,5 +1,6 @@
 ﻿using FootballManagerAPI.Controllers.Entities;
 using FootballManagerBLL.Interfaces;
+using FootballManagerDAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 

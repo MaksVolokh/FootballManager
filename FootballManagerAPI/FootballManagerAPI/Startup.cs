@@ -10,8 +10,7 @@ using FootballManagerDAL.Interfaces;
 using FootballManagerBLL.Interfaces;
 using FootballManagerBLL.FootballManagerBLL;
 using FootballManagerDAL.Repositories;
-using FootballManagerDAL.Interfaces;
-using FootballManagerDAL.Repositories;
+  
 
 namespace FootballManagerAPI
 {
@@ -29,13 +28,18 @@ namespace FootballManagerAPI
         {
 
             services.AddControllers();
-            services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(options => 
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FootballManagerAPI", Version = "v1" });
             });
+            
             services.AddScoped<IPlayerService, PlayerService>();
             services.AddScoped<IPlayersRepository, PlayerRepository>();
+            services.AddScoped<ICoachService, CoachService>();
+            services.AddScoped<ICoachRepository, CoachRepository>();
             services.AddMvc();
         }
 

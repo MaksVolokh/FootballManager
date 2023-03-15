@@ -3,7 +3,6 @@ using FootballManagerDAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using FootballManagerAPI.Data;
 
-
 namespace FootballManagerDAL.Repositories
 {
    public class PlayerRepository : IPlayersRepository

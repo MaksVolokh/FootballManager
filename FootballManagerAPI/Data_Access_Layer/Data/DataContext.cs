@@ -1,4 +1,5 @@
 ﻿using FootballManagerAPI.Controllers.Entities;
+using FootballManagerDAL.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FootballManagerAPI.Data
@@ -7,5 +8,6 @@ namespace FootballManagerAPI.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<FootballPlayer> FootballPlayers{ get; set; }
+        public DbSet<Coach> CoachForTeam { get; set; }
     }
 }
