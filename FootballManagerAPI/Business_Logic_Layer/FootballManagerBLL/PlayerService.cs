@@ -18,39 +18,61 @@ namespace FootballManagerBLL.FootballManagerBLL
             return _repository.Get();
         }
 
-        public FootballPlayer? GetPlayerById(int id)
+        public FootballPlayer? GetById(int id)
         {
-            return _repository.GetPlayerById(id);
+            return _repository.GetById(id);
         }
 
-        public List<FootballPlayer> GetPlayersByFirstName(string firstName)
+        public List<FootballPlayer> GetByFirstName(string firstName)
         {
-            return _repository.GetPlayersByFirstName(firstName);
+            return _repository.GetByFirstName(firstName);
         }
 
-        public List<FootballPlayer> GetPlayersByLastName(string lastName)
+        public List<FootballPlayer> GetByLastName(string lastName)
         {
-            return _repository.GetPlayersByLastName(lastName);
+            return _repository.GetByLastName(lastName);
         }
 
-        public FootballPlayer? AddFootballPlayer(FootballPlayer player)
+        public FootballPlayer? Add(FootballPlayer player)
         {
-            return _repository.AddFootballPlayer(player);
+            return _repository.Add(player);
         }
 
-        public FootballPlayer? UpdatePlayer(FootballPlayer request)
+        public FootballPlayer? Update(FootballPlayer request)
         {
-            return _repository.UpdatePlayer(request);
+            FootballPlayer? player = _repository.GetById(request.Id);
+
+            if (player == null)
+            {
+                return null;
+            }
+
+            return _repository.Update(request);
         }
 
         public FootballPlayer? PatchUpdate(FootballPlayer requestPatch)
         {
+            FootballPlayer? player = _repository.GetById(requestPatch.Id);
+
+            if (player == null)
+            {
+                return null;
+            }
+
             return _repository.PatchUpdate(requestPatch);
         }
 
-        public void Delete(int id)
+        public FootballPlayer? Delete(int id)
         {
-            _repository.Delete(id);
+            FootballPlayer? player = _repository.GetById(id);
+
+            if (player == null)
+            {
+                return null;
+            }
+            _repository.Delete(player);
+
+            return player;
         }
     }
 

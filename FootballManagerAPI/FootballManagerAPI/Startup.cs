@@ -40,6 +40,8 @@ namespace FootballManagerAPI
             services.AddScoped<IPlayersRepository, PlayerRepository>();
             services.AddScoped<ICoachService, CoachService>();
             services.AddScoped<ICoachRepository, CoachRepository>();
+            services.AddScoped<IFootballTeam, FootballTeamService>();
+            services.AddScoped<IFootballTeamRepository, FootballTeamRepository>();
             services.AddMvc();
         }
 

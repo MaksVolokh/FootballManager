@@ -1,7 +1,7 @@
 ﻿using FootballManagerAPI.Controllers.Entities;
 using FootballManagerDAL.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using FootballManagerAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace FootballManagerDAL.Repositories
 {
@@ -18,10 +18,10 @@ namespace FootballManagerDAL.Repositories
             return db.FootballPlayers.ToList();
         }
 
-        public FootballPlayer GetPlayerById(int id)
+        public FootballPlayer? GetById(int id)
         {
 
-            FootballPlayer? player = db.FootballPlayers.FirstOrDefault(x => x.Id == id);
+            FootballPlayer? player = db.FootballPlayers.AsNoTracking().FirstOrDefault(x => x.Id == id);
 
             if (player == null)
             {
@@ -31,21 +31,21 @@ namespace FootballManagerDAL.Repositories
             return player;
         }
 
-        public List<FootballPlayer> GetPlayersByFirstName(string firstName)
+        public List<FootballPlayer> GetByFirstName(string firstName)
         {
-            var players = db.FootballPlayers.Where(f => f.FirstName == firstName).ToList();
+            List<FootballPlayer> players = db.FootballPlayers.Where(f => f.FirstName == firstName).ToList();
 
             return players; 
         }
 
-        public List<FootballPlayer> GetPlayersByLastName(string lastName)
+        public List<FootballPlayer> GetByLastName(string lastName)
         {
-            var players = db.FootballPlayers.Where(l => l.LastName == lastName).ToList();
+            List<FootballPlayer> players = db.FootballPlayers.Where(l => l.LastName == lastName).ToList();
 
             return players;
         }
 
-        public FootballPlayer? AddFootballPlayer(FootballPlayer player)
+        public FootballPlayer? Add(FootballPlayer player)
         {
             db.FootballPlayers.Add(player);
             db.SaveChanges();
@@ -53,35 +53,25 @@ namespace FootballManagerDAL.Repositories
             return player;
         }
 
-        public FootballPlayer? UpdatePlayer(FootballPlayer request)
+        public FootballPlayer Update(FootballPlayer request)
         {
-            var player = db.FootballPlayers.AsNoTracking().FirstOrDefault(r => r.Id == request.Id);
-
             db.FootballPlayers.Update(request);
             db.SaveChanges();
 
             return request;
         }
 
-        public FootballPlayer? PatchUpdate(FootballPlayer requestPatch)
+        public FootballPlayer PatchUpdate(FootballPlayer requestPatch)
         {
-            var player = db.FootballPlayers.AsNoTracking().FirstOrDefault(r => r.Id == requestPatch.Id);
-            
             db.FootballPlayers.Update(requestPatch);
             db.SaveChanges();
 
             return requestPatch;
         }
 
-        public void Delete(int id)
+        public void Delete(FootballPlayer player)
         {
-            FootballPlayer? player = db.FootballPlayers.FirstOrDefault(i => i.Id == id);
-
-            if (player != null)
-            {
-                db.FootballPlayers.Remove(player);
-            }
-
+            db.FootballPlayers.Remove(player);
             db.SaveChanges();
         }
     }

@@ -31,14 +31,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet("{id:int}")]
-        public ActionResult<Coach> GetCoachById(int id)
+        public ActionResult<Coach> GetById(int id)
         {
             if (id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            Coach coach = _service.GetCoachById(id);
+            Coach coach = _service.GetById(id);
 
             if (coach == null)
             {
@@ -50,14 +50,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet("searchByQuery")]
-        public ActionResult<Coach> GetCoachByFirstName([FromQuery] string firstName)
+        public ActionResult<Coach> GetByFirstName([FromQuery] string firstName)
         {
             if (firstName is not string)
             {
                 return BadRequest("First name should be string!");
             }
 
-            Coach coach = _service.GetCoachByFirstName(firstName);
+            Coach coach = _service.GetByFirstName(firstName);
 
             if (coach == null)
             {
@@ -69,14 +69,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet("searchByQuerylN")]
-        public ActionResult<Coach> GetCoachByLastName([FromQuery] string lastName)
+        public ActionResult<Coach> GetByLastName([FromQuery] string lastName)
         {
             if (lastName is not string)
             {
                 return BadRequest("Last name should be string!");
             }
 
-            Coach coach = _service.GetCoachByLastName(lastName);
+            Coach coach = _service.GetByLastName(lastName);
 
             if (coach == null)
             {
@@ -88,23 +88,23 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpPost("AddCoach")]
-        public ActionResult<Coach> AddCoach(Coach coach)
+        public ActionResult<Coach> Add(Coach coach)
         {
-            _service.AddCoach(coach);
+            _service.Add(coach);
 
             return Ok(coach);
         }
 
 
         [HttpPut("UpdateCoach")]
-        public ActionResult<Coach> UpdateCoach(Coach request)
+        public ActionResult<Coach> Update(Coach request)
         {
             if (request.Id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            Coach coach = _service.UpdateCoach(request);
+            Coach coach = _service.Update(request);
 
             if (coach == null)
             {
@@ -116,14 +116,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpPatch("PatchUpdateCoach")]
-        public ActionResult<Coach> PatchUpdateCoach(Coach requestPatch)
+        public ActionResult<Coach> PatchUpdate(Coach requestPatch)
         {
             if (requestPatch.Id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            Coach coach = _service.PatchUpdateCoach(requestPatch);
+            Coach coach = _service.PatchUpdate(requestPatch);
 
             if (coach == null)
             {
@@ -135,9 +135,21 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpDelete("{id:int}")]
-        public void DeleteCoach(int id)
+        public ActionResult<Coach> Delete(int id)
         {
-            _service.DeleteCoach(id);
+            if (id < 0)
+            {
+                return BadRequest("Id should be positive number!");
+            }
+
+            Coach coach = _service.Delete(id);
+
+            if (coach == null)
+            {
+                return NotFound("Coach is not found!");
+            }
+
+            return NoContent();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using FootballManagerAPI.Controllers.Entities;
 using FootballManagerBLL.Interfaces;
-using FootballManagerDAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -34,14 +33,14 @@ namespace FootballManagerAPI.Controllers
         [HttpGet("{id:int}")] 
         public ActionResult<FootballPlayer> GetPlayerById(int id)
         {
-            if (id < 0)
+            if(id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            FootballPlayer player = _service.GetPlayerById(id);
+            FootballPlayer player = _service.GetById(id);
 
-            if(player == null)
+            if (player == null)
             {
                 return NotFound("Player is not found!");
             }
@@ -51,16 +50,16 @@ namespace FootballManagerAPI.Controllers
           
 
         [HttpGet("searchByQuery")]
-        public ActionResult<List<FootballPlayer>> GetPlayersByFirstName([FromQuery] string firstName)
+        public ActionResult<List<FootballPlayer>> GetByFirstName([FromQuery] string firstName)
         {
             if (firstName is not string)
             {
                 return BadRequest("First name should be string!");
             }
 
-            List<FootballPlayer> player = _service.GetPlayersByFirstName(firstName);
+            List<FootballPlayer> player = _service.GetByFirstName(firstName);
 
-            if(player.Count == 0)
+            if (player.Count == 0)
             {
                 return NotFound("Players is not found!");
             }
@@ -70,14 +69,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet("searchByQuerylN")]
-        public ActionResult<List<FootballPlayer>> GetPlayersByLastName([FromQuery] string lastName)
+        public ActionResult<List<FootballPlayer>> GetByLastName([FromQuery] string lastName)
         {
-            if(lastName is not string)
+            if (lastName is not string)
             {
                 return BadRequest("Last name should be string!");
             }
 
-            List<FootballPlayer> player = _service.GetPlayersByLastName(lastName);
+            List<FootballPlayer> player = _service.GetByLastName(lastName);
 
             if (player.Count == 0)
             {
@@ -89,23 +88,23 @@ namespace FootballManagerAPI.Controllers
          
 
         [HttpPost("Add")]
-        public ActionResult<FootballPlayer> AddFootballPlayer(FootballPlayer player)
+        public ActionResult<FootballPlayer> Add(FootballPlayer player)
         { 
-            _service.AddFootballPlayer(player);
+            _service.Add(player);
 
             return Ok(player);
         } 
 
 
         [HttpPut("Update")] 
-        public ActionResult<FootballPlayer> UpdatePlayer(FootballPlayer request)
+        public ActionResult<FootballPlayer> Update(FootballPlayer request)
           {
             if (request.Id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            FootballPlayer player = _service.UpdatePlayer(request);
+            FootballPlayer player = _service.Update(request);
 
             if (player == null)
             { 
@@ -136,9 +135,21 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpDelete("{id:int}")]
-        public void Delete(int id)
+        public ActionResult<FootballPlayer> Delete(int id)
         {
-            _service.Delete(id);
+            if (id < 0)
+            {
+                return BadRequest("Id should be positive number!");
+            }
+
+            FootballPlayer player = _service.Delete(id);
+
+            if (player == null)
+            {
+                return NotFound("Player is not found!");
+            }
+
+            return NoContent();
         }         
     }
 }

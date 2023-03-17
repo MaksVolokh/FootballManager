@@ -5,12 +5,12 @@ namespace FootballManagerBLL.Interfaces
     public interface IPlayerService
     {
         List<FootballPlayer> Get();
-        FootballPlayer? GetPlayerById(int id);
-        List<FootballPlayer> GetPlayersByFirstName(string firstName);
-        List<FootballPlayer> GetPlayersByLastName(string lastName);
-        FootballPlayer? AddFootballPlayer(FootballPlayer player);
-        FootballPlayer? UpdatePlayer(FootballPlayer request);
+        FootballPlayer? GetById(int id);
+        List<FootballPlayer> GetByFirstName(string firstName);
+        List<FootballPlayer> GetByLastName(string lastName);
+        FootballPlayer? Add(FootballPlayer player);
+        FootballPlayer? Update(FootballPlayer request);
         FootballPlayer? PatchUpdate(FootballPlayer request);
-        public void Delete(int id);
+        public FootballPlayer? Delete(int id);
     }
 }

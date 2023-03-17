@@ -18,33 +18,55 @@ namespace FootballManagerBLL.FootballManagerBLL
         {
             return _coachRepository.Get();
         }
-        public Coach? GetCoachById(int id)
+        public Coach? GetById(int id)
         {
-            return _coachRepository.GetCoachById(id);
+            return _coachRepository.GetById(id);
         }
-        public Coach? GetCoachByFirstName(string firstName)
+        public Coach? GetByFirstName(string firstName)
         {
-            return _coachRepository.GetCoachByFirstName(firstName);
+            return _coachRepository.GetByFirstName(firstName);
         }
-        public Coach? GetCoachByLastName(string lastName)
+        public Coach? GetByLastName(string lastName)
         {
-            return _coachRepository.GetCoachByLastName(lastName);
+            return _coachRepository.GetByLastName(lastName);
         }
-        public Coach? AddCoach(Coach coach)
+        public Coach? Add(Coach coach)
         {
-            return _coachRepository.AddCoach(coach);
+            return _coachRepository.Add(coach);
         }
-        public Coach? UpdateCoach(Coach request)
+        public Coach? Update(Coach request)
         {
-            return _coachRepository.UpdateCoach(request);
+            Coach? coach = _coachRepository.GetById(request.Id);
+
+            if (coach == null)
+            {
+                return null;
+            }
+
+            return _coachRepository.Update(request);
         }
-        public Coach? PatchUpdateCoach(Coach requestPatch)
+        public Coach? PatchUpdate(Coach requestPatch)
         {
-            return _coachRepository.PatchUpdateCoach(requestPatch);
+            Coach? coach = _coachRepository.GetById(requestPatch.Id);
+
+            if (coach == null)
+            {
+                return null;
+            }
+
+            return _coachRepository.PatchUpdate(requestPatch);
         }
-        public void DeleteCoach(int id)
+        public Coach? Delete(int id)
         {
-            _coachRepository.DeleteCoach(id);
+            Coach? coach = _coachRepository.GetById(id);
+
+            if (coach == null)
+            {
+                return null;
+            }
+            _coachRepository.Delete(coach);
+
+            return coach;
         }
     }
 }

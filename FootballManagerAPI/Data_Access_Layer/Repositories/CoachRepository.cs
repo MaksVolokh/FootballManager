@@ -17,10 +17,10 @@ namespace FootballManagerDAL.Repositories
             return dbcoach.CoachForTeam.ToList();
         }
 
-        public Coach? GetCoachById(int id)
+        public Coach? GetById(int id)
         {
 
-            Coach? coach = dbcoach.CoachForTeam.FirstOrDefault(x => x.Id == id);
+            Coach? coach = dbcoach.CoachForTeam.AsNoTracking().FirstOrDefault(x => x.Id == id);
 
             if (coach == null)
             {
@@ -30,21 +30,21 @@ namespace FootballManagerDAL.Repositories
             return coach;
         }
 
-        public Coach? GetCoachByFirstName(string firstName)
+        public Coach? GetByFirstName(string firstName)
         {
             Coach? coach = dbcoach.CoachForTeam.Where(f => f.FirstName == firstName).FirstOrDefault();
 
             return coach;
         }
 
-        public Coach? GetCoachByLastName(string lastName)
+        public Coach? GetByLastName(string lastName)
         {
             Coach? coach = dbcoach.CoachForTeam.Where(l => l.LastName == lastName).FirstOrDefault();
 
             return coach;
         }
 
-        public Coach? AddCoach(Coach coach)
+        public Coach? Add(Coach coach)
         {
             dbcoach.CoachForTeam.Add(coach);
             dbcoach.SaveChanges();
@@ -52,35 +52,25 @@ namespace FootballManagerDAL.Repositories
             return coach;
         }
 
-        public Coach? UpdateCoach(Coach request)
+        public Coach Update(Coach request)
         {
-            Coach? coach = dbcoach.CoachForTeam.AsNoTracking().FirstOrDefault(r => r.Id == request.Id);
-
             dbcoach.CoachForTeam.Update(request);
             dbcoach.SaveChanges();
 
             return request;
         }
 
-        public Coach? PatchUpdateCoach(Coach requestPatch)
+        public Coach PatchUpdate(Coach requestPatch)
         {
-            Coach? coach = dbcoach.CoachForTeam.AsNoTracking().FirstOrDefault(r => r.Id == requestPatch.Id);
-
             dbcoach.CoachForTeam.Update(requestPatch);
             dbcoach.SaveChanges();
 
             return requestPatch;
         }
 
-        public void DeleteCoach(int id)
+        public void Delete(Coach coach)
         {
-            Coach? coach = dbcoach.CoachForTeam.FirstOrDefault(i => i.Id == id);
-
-            if (coach != null)
-            {
-                dbcoach.CoachForTeam.Remove(coach);
-            }
-
+            dbcoach.CoachForTeam.Remove(coach);
             dbcoach.SaveChanges();
         }
     }

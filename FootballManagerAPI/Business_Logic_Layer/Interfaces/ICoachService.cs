@@ -5,12 +5,12 @@ namespace FootballManagerBLL.Interfaces
     public interface ICoachService
     {
         List<Coach> Get();
-        Coach? GetCoachById(int id);
-        Coach? GetCoachByFirstName(string firstName);
-        Coach? GetCoachByLastName(string lastName);
-        Coach? AddCoach(Coach coach);
-        Coach? UpdateCoach(Coach request);
-        Coach? PatchUpdateCoach(Coach requestPatch);
-        public void DeleteCoach(int id);
+        Coach? GetById(int id);
+        Coach? GetByFirstName(string firstName);
+        Coach? GetByLastName(string lastName);
+        Coach? Add(Coach coach);
+        Coach? Update(Coach request);
+        Coach? PatchUpdate(Coach requestPatch);
+        public Coach? Delete(int id);
     }
 }

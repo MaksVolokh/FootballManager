@@ -9,5 +9,6 @@ namespace FootballManagerAPI.Data
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<FootballPlayer> FootballPlayers{ get; set; }
         public DbSet<Coach> CoachForTeam { get; set; }
+        public DbSet<FootballTeam> FootballTeams { get; set; }  
     }
 }
