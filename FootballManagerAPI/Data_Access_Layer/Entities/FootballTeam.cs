@@ -1,17 +1,18 @@
 ﻿using FootballManagerAPI.Controllers.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FootballManagerDAL.Entities
 {
     public class FootballTeam
     {
-        public List<FootballPlayer> footballPlayers = new List<FootballPlayer>();
-        public List<FootballPlayer> benchPlayers = new List<FootballPlayer>();
-        public string TeamName { get; set; } = String.Empty;
         public int Id { get; set; }
+        public string TeamName { get; set; }
+
+        // navigation properties
+        [ForeignKey("Coach")]
+        public int? CoachId { get; set; }
+        public Coach Coach { get; set; }
+
+        public ICollection<FootballPlayer> Players { get; set; }
     }
 }

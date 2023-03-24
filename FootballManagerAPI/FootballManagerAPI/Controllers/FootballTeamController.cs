@@ -106,7 +106,7 @@ namespace FootballManagerAPI.Controllers
 
             FootballTeam team = _service.Delete(id);
 
-            if (team == null)
+            if (team == null) 
             {
                 return NotFound("Team is not found!");
             }

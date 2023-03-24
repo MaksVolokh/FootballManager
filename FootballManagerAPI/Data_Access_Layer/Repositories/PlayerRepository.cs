@@ -15,13 +15,14 @@ namespace FootballManagerDAL.Repositories
         
         public List<FootballPlayer> Get()
         {
-            return db.FootballPlayers.ToList();
+            return db.FootballPlayers.Include(s => s.FootballTeam).ToList();
         }
 
-        public FootballPlayer? GetById(int id)
+        public FootballPlayer GetById(int id)
         {
 
-            FootballPlayer? player = db.FootballPlayers.AsNoTracking().FirstOrDefault(x => x.Id == id);
+            FootballPlayer player = db.FootballPlayers.Include(s => s.FootballTeam)
+                .AsNoTracking().FirstOrDefault(x => x.Id == id);
 
             if (player == null)
             {
@@ -33,19 +34,21 @@ namespace FootballManagerDAL.Repositories
 
         public List<FootballPlayer> GetByFirstName(string firstName)
         {
-            List<FootballPlayer> players = db.FootballPlayers.Where(f => f.FirstName == firstName).ToList();
+            List<FootballPlayer> players = db.FootballPlayers.Include(s => s.FootballTeam)
+                .Where(f => f.FirstName == firstName).ToList();
 
             return players; 
         }
 
         public List<FootballPlayer> GetByLastName(string lastName)
         {
-            List<FootballPlayer> players = db.FootballPlayers.Where(l => l.LastName == lastName).ToList();
+            List<FootballPlayer> players = db.FootballPlayers.Include(s => s.FootballTeam)
+                .Where(l => l.LastName == lastName).ToList();
 
             return players;
         }
 
-        public FootballPlayer? Add(FootballPlayer player)
+        public FootballPlayer Add(FootballPlayer player)
         {
             db.FootballPlayers.Add(player);
             db.SaveChanges();

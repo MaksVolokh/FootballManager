@@ -11,8 +11,8 @@ namespace FootballManagerDAL.Interfaces
     public interface IFootballTeamRepository
     {
         List<FootballTeam> Get();
-        FootballTeam? GetById(int id);
-        FootballTeam? GetByTeamName(string name);
+        FootballTeam GetById(int id);
+        FootballTeam GetByTeamName(string name);
         FootballTeam Add(FootballTeam team);
         FootballTeam Update(FootballTeam request);
         void Delete(FootballTeam team);

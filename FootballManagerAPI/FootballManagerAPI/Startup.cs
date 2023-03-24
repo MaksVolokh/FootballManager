@@ -28,8 +28,11 @@ namespace FootballManagerAPI
         {
 
             services.AddControllers();
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddDbContext<DataContext>(options => 
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             
             services.AddSwaggerGen(c =>
             {

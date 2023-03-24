@@ -16,12 +16,13 @@ namespace FootballManagerDAL.Repositories
 
         public List<FootballTeam> Get()
         {
-            return dataContext.FootballTeams.ToList();
+            return dataContext.FootballTeams.Include(s => s.Coach).ToList();
         }
 
-        public FootballTeam? GetById(int id)
+        public FootballTeam GetById(int id)
         {
-            FootballTeam? team = dataContext.FootballTeams.AsNoTracking().FirstOrDefault(x => x.Id == id);
+            FootballTeam team = dataContext.FootballTeams.Include(s => s.Coach)
+                .AsNoTracking().FirstOrDefault(x => x.Id == id);
 
             if (team == null)
             {
@@ -31,9 +32,10 @@ namespace FootballManagerDAL.Repositories
             return team;
         }
 
-        public FootballTeam? GetByTeamName(string teamName)
+        public FootballTeam GetByTeamName(string teamName)
         {
-            FootballTeam? team = dataContext.FootballTeams.FirstOrDefault(f => f.TeamName == teamName);
+            FootballTeam team = dataContext.FootballTeams.Include(s => s.Coach)
+                .FirstOrDefault(f => f.TeamName == teamName);
 
             return team;
         }

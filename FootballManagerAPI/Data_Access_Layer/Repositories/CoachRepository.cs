@@ -1,4 +1,5 @@
 ﻿using FootballManagerAPI.Data;
+using FootballManagerAPI.Migrations;
 using FootballManagerDAL.Entities;
 using FootballManagerDAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -14,13 +15,14 @@ namespace FootballManagerDAL.Repositories
         }
         public List<Coach> Get()
         {
-            return dbcoach.CoachForTeam.ToList();
+            return dbcoach.CoachForTeam.Include(s => s.FootballTeam).ToList();
         }
 
-        public Coach? GetById(int id)
+        public Coach GetById(int id)
         {
 
-            Coach? coach = dbcoach.CoachForTeam.AsNoTracking().FirstOrDefault(x => x.Id == id);
+            Coach coach = dbcoach.CoachForTeam.Include(s => s.FootballTeam)
+                .AsNoTracking().FirstOrDefault(x => x.Id == id);
 
             if (coach == null)
             {
@@ -30,21 +32,23 @@ namespace FootballManagerDAL.Repositories
             return coach;
         }
 
-        public Coach? GetByFirstName(string firstName)
+        public Coach GetByFirstName(string firstName)
         {
-            Coach? coach = dbcoach.CoachForTeam.Where(f => f.FirstName == firstName).FirstOrDefault();
+            Coach coach = dbcoach.CoachForTeam.Include(s => s.FootballTeam)
+                .Where(f => f.FirstName == firstName).FirstOrDefault();
 
             return coach;
         }
 
-        public Coach? GetByLastName(string lastName)
+        public Coach GetByLastName(string lastName)
         {
-            Coach? coach = dbcoach.CoachForTeam.Where(l => l.LastName == lastName).FirstOrDefault();
+            Coach coach = dbcoach.CoachForTeam.Include(s => s.FootballTeam)
+                .Where(l => l.LastName == lastName).FirstOrDefault();
 
             return coach;
         }
 
-        public Coach? Add(Coach coach)
+        public Coach Add(Coach coach)
         {
             dbcoach.CoachForTeam.Add(coach);
             dbcoach.SaveChanges();
@@ -69,7 +73,7 @@ namespace FootballManagerDAL.Repositories
         }
 
         public void Delete(Coach coach)
-        {
+        { 
             dbcoach.CoachForTeam.Remove(coach);
             dbcoach.SaveChanges();
         }
