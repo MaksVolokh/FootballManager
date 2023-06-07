@@ -14,15 +14,15 @@ namespace FootballManagerDAL.Repositories
             dataContext = context;
         }
 
-        public List<FootballTeam> Get()
+        public async Task<List<FootballTeam>> GetAsync()
         {
-            return dataContext.FootballTeams.Include(s => s.Coach).ToList();
+            return await dataContext.FootballTeams.Include(s => s.Coach).ToListAsync();
         }
 
-        public FootballTeam GetById(int id)
+        public async Task<FootballTeam> GetByIdAsync(int id)
         {
-            FootballTeam team = dataContext.FootballTeams.Include(s => s.Coach)
-                .AsNoTracking().FirstOrDefault(x => x.Id == id);
+            FootballTeam team = await dataContext.FootballTeams.Include(s => s.Coach)
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (team == null)
             {
@@ -32,34 +32,34 @@ namespace FootballManagerDAL.Repositories
             return team;
         }
 
-        public FootballTeam GetByTeamName(string teamName)
+        public async Task<FootballTeam> GetByTeamNameAsync(string teamName)
         {
-            FootballTeam team = dataContext.FootballTeams.Include(s => s.Coach)
-                .FirstOrDefault(f => f.TeamName == teamName);
+            FootballTeam team = await dataContext.FootballTeams.Include(s => s.Coach)
+                .FirstOrDefaultAsync(f => f.TeamName == teamName);
 
             return team;
         }
 
-        public FootballTeam Add(FootballTeam team)
+        public async Task<FootballTeam> AddAsync(FootballTeam team)
         {
             dataContext.FootballTeams.Add(team);
-            dataContext.SaveChanges();
+            await dataContext.SaveChangesAsync();
 
             return team;
         }
 
-        public FootballTeam Update(FootballTeam request)
+        public async Task<FootballTeam> UpdateAsync(FootballTeam request)
         {
             dataContext.FootballTeams.Update(request);
-            dataContext.SaveChanges();
+            await dataContext.SaveChangesAsync();
 
             return request;
         }
 
-        public void Delete(FootballTeam team)
+        public async Task DeleteAsync(FootballTeam team)
         {
             dataContext.FootballTeams.Remove(team);
-            dataContext.SaveChanges();
+            await dataContext.SaveChangesAsync();
         }
     }
 }

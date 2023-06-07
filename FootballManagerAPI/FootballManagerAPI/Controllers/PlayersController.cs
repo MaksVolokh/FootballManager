@@ -2,6 +2,7 @@
 using FootballManagerBLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FootballManagerAPI.Controllers
 {
@@ -17,9 +18,9 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet]
-        public ActionResult<List<FootballPlayer>> Get()
+        public async Task<ActionResult<List<FootballPlayer>>> GetAsync()
         {
-            List<FootballPlayer> players = _service.Get();
+            List<FootballPlayer> players = await _service.GetAsync();
 
             if (players.Count == 0)
             {   
@@ -31,14 +32,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet("{id:int}")] 
-        public ActionResult<FootballPlayer> GetPlayerById(int id)
+        public async Task<ActionResult<FootballPlayer>> GetPlayerByIdAsync(int id)
         {
             if(id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            FootballPlayer player = _service.GetById(id);
+            FootballPlayer player = await _service.GetByIdAsync(id);
 
             if (player == null)
             {
@@ -50,14 +51,14 @@ namespace FootballManagerAPI.Controllers
           
 
         [HttpGet("searchByQuery")]
-        public ActionResult<List<FootballPlayer>> GetByFirstName([FromQuery] string firstName)
+        public async Task<ActionResult<List<FootballPlayer>>> GetByFirstNameAsync([FromQuery] string firstName)
         {
             if (firstName is not string)
             {
                 return BadRequest("First name should be string!");
             }
 
-            List<FootballPlayer> player = _service.GetByFirstName(firstName);
+            List<FootballPlayer> player = await _service.GetByFirstNameAsync(firstName);
 
             if (player.Count == 0)
             {
@@ -69,14 +70,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet("searchByQuerylN")]
-        public ActionResult<List<FootballPlayer>> GetByLastName([FromQuery] string lastName)
+        public async Task<ActionResult<List<FootballPlayer>>> GetByLastNameAsync([FromQuery] string lastName)
         {
             if (lastName is not string)
             {
                 return BadRequest("Last name should be string!");
             }
 
-            List<FootballPlayer> player = _service.GetByLastName(lastName);
+            List<FootballPlayer> player = await _service.GetByLastNameAsync(lastName);
 
             if (player.Count == 0)
             {
@@ -88,23 +89,23 @@ namespace FootballManagerAPI.Controllers
          
 
         [HttpPost("Add")]
-        public ActionResult<FootballPlayer> Add(FootballPlayer player)
+        public async Task<ActionResult<FootballPlayer>> AddAsync(FootballPlayer player)
         { 
-            _service.Add(player);
+            await _service.AddAsync(player);
 
             return Ok(player);
         } 
 
 
         [HttpPut("Update")] 
-        public ActionResult<FootballPlayer> Update(FootballPlayer request)
+        public async Task<ActionResult<FootballPlayer>> UpdateAsync(FootballPlayer request)
           {
             if (request.Id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            FootballPlayer player = _service.Update(request);
+            FootballPlayer player = await _service.UpdateAsync(request);
 
             if (player == null)
             { 
@@ -116,14 +117,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpPatch("PatchUpdate")]
-        public ActionResult<FootballPlayer> PatchUpdate(FootballPlayer requestPatch)
+        public async Task<ActionResult<FootballPlayer>> PatchUpdateAsync(FootballPlayer requestPatch)
         {
             if (requestPatch.Id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            FootballPlayer player = _service.PatchUpdate(requestPatch);
+            FootballPlayer player = await _service.PatchUpdateAsync(requestPatch);
 
             if (player == null)
             {
@@ -135,14 +136,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpDelete("{id:int}")]
-        public ActionResult<FootballPlayer> Delete(int id)
+        public async Task<ActionResult<FootballPlayer>> DeleteAsync(int id)
         {
             if (id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            FootballPlayer player = _service.Delete(id);
+            FootballPlayer player = await _service.DeleteAsync(id);
 
             if (player == null)
             {

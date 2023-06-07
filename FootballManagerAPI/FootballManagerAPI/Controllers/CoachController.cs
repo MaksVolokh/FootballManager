@@ -2,6 +2,7 @@
 using FootballManagerDAL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FootballManagerAPI.Controllers
 {
@@ -17,9 +18,9 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet]
-        public ActionResult<List<Coach>> Get()
+        public async Task<ActionResult<List<Coach>>> GetAsync()
         {
-            List<Coach> coaches = _service.Get();
+            List<Coach> coaches = await _service.GetAsync();
 
             if (coaches.Count == 0)
             {
@@ -31,14 +32,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet("{id:int}")]
-        public ActionResult<Coach> GetById(int id)
+        public async Task<ActionResult<Coach>> GetByIdAsync(int id)
         {
             if (id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            Coach coach = _service.GetById(id);
+            Coach coach = await _service.GetByIdAsync(id);
 
             if (coach == null)
             {
@@ -50,14 +51,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet("searchByQuery")]
-        public ActionResult<Coach> GetByFirstName([FromQuery] string firstName)
+        public async Task<ActionResult<Coach>> GetByFirstNameAsync([FromQuery] string firstName)
         {
             if (firstName is not string)
             {
                 return BadRequest("First name should be string!");
             }
 
-            Coach coach = _service.GetByFirstName(firstName);
+            Coach coach = await _service.GetByFirstNameAsync(firstName);
 
             if (coach == null)
             {
@@ -69,14 +70,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet("searchByQuerylN")]
-        public ActionResult<Coach> GetByLastName([FromQuery] string lastName)
+        public async Task<ActionResult<Coach>> GetByLastNameAsync([FromQuery] string lastName)
         {
             if (lastName is not string)
             {
                 return BadRequest("Last name should be string!");
             }
 
-            Coach coach = _service.GetByLastName(lastName);
+            Coach coach = await _service.GetByLastNameAsync(lastName);
 
             if (coach == null)
             {
@@ -88,23 +89,23 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpPost("AddCoach")]
-        public ActionResult<Coach> Add(Coach coach)
+        public async Task<ActionResult<Coach>> AddAsync(Coach coach)
         {
-            _service.Add(coach);
+            await _service.AddAsync(coach);
 
             return Ok(coach);
         }
 
 
         [HttpPut("UpdateCoach")]
-        public ActionResult<Coach> Update(Coach request)
+        public async Task<ActionResult<Coach>> UpdateAsync(Coach request)
         {
             if (request.Id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            Coach coach = _service.Update(request);
+            Coach coach = await _service.UpdateAsync(request);
 
             if (coach == null)
             {
@@ -116,14 +117,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpPatch("PatchUpdateCoach")]
-        public ActionResult<Coach> PatchUpdate(Coach requestPatch)
+        public async Task<ActionResult<Coach>> PatchUpdateAsync(Coach requestPatch)
         {
             if (requestPatch.Id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            Coach coach = _service.PatchUpdate(requestPatch);
+            Coach coach = await _service.PatchUpdateAsync(requestPatch);
 
             if (coach == null)
             {
@@ -135,14 +136,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpDelete("{id:int}")]
-        public ActionResult<Coach> Delete(int id)
+        public async Task<ActionResult<Coach>> DeleteAsync(int id)
         {
             if (id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            Coach coach = _service.Delete(id);
+            Coach coach = await _service.DeleteAsync(id);
 
             if (coach == null)
             {

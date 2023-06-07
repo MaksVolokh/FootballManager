@@ -3,13 +3,13 @@ namespace FootballManagerDAL.Interfaces
 {
     public interface ICoachRepository
     {
-        List<Coach> Get();
-        Coach GetById(int id);
-        Coach GetByFirstName(string firstName);
-        Coach GetByLastName(string lastName);
-        Coach Add(Coach coach);
-        Coach Update(Coach request);
-        Coach PatchUpdate(Coach requestPatch);
-        public void Delete(Coach coach);
+        Task<List<Coach>> GetAsync();
+        Task<Coach> GetByIdAsync(int id);
+        Task<Coach> GetByFirstNameAsync(string firstName);
+        Task<Coach> GetByLastNameAsync(string lastName);
+        Task<Coach> AddAsync(Coach coach);
+        Task<Coach> UpdateAsync(Coach request);
+        Task<Coach> PatchUpdateAsync(Coach requestPatch);
+        Task DeleteAsync(Coach coach);
     }
 }

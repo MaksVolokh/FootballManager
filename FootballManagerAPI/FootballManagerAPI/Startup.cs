@@ -10,7 +10,8 @@ using FootballManagerDAL.Interfaces;
 using FootballManagerBLL.Interfaces;
 using FootballManagerBLL.FootballManagerBLL;
 using FootballManagerDAL.Repositories;
-  
+using FootballManagerDAL.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace FootballManagerAPI
 {
@@ -33,12 +34,14 @@ namespace FootballManagerAPI
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddDbContext<DataContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FootballManagerAPI", Version = "v1" });
             });
-            
+
+
             services.AddScoped<IPlayerService, PlayerService>();
             services.AddScoped<IPlayersRepository, PlayerRepository>();
             services.AddScoped<ICoachService, CoachService>();
@@ -61,6 +64,8 @@ namespace FootballManagerAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

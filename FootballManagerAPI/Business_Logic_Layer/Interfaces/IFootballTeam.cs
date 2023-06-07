@@ -5,11 +5,11 @@ namespace FootballManagerBLL.Interfaces
 {
     public interface IFootballTeam
     {
-        List<FootballTeam> Get();
-        FootballTeam? GetById(int id);
-        FootballTeam? GetByTeamName(string name);
-        FootballTeam? Add(FootballTeam team);
-        FootballTeam? Update(FootballTeam request);
-        FootballTeam? Delete(int id);
+        Task<List<FootballTeam>> GetAsync();
+        Task<FootballTeam>? GetByIdAsync(int id);
+        Task<FootballTeam>? GetByTeamNameAsync(string name);
+        Task<FootballTeam>? AddAsync(FootballTeam team);
+        Task<FootballTeam>? UpdateAsync(FootballTeam request);
+        Task<FootballTeam>? DeleteAsync(int id);
     }
 }

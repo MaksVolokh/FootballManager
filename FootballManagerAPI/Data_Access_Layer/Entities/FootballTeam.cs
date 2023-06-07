@@ -8,11 +8,16 @@ namespace FootballManagerDAL.Entities
         public int Id { get; set; }
         public string TeamName { get; set; }
 
+        [ForeignKey("Media")]
+        public int MediaId { get; set; }
+        public Media Media { get; set; }
+
         // navigation properties
         [ForeignKey("Coach")]
         public int? CoachId { get; set; }
         public Coach Coach { get; set; }
 
         public ICollection<FootballPlayer> Players { get; set; }
+        public FootballMatch Match { get; set; }
     }
 }

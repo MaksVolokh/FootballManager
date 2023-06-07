@@ -10,12 +10,12 @@ namespace FootballManagerDAL.Interfaces
 {
     public interface IFootballTeamRepository
     {
-        List<FootballTeam> Get();
-        FootballTeam GetById(int id);
-        FootballTeam GetByTeamName(string name);
-        FootballTeam Add(FootballTeam team);
-        FootballTeam Update(FootballTeam request);
-        void Delete(FootballTeam team);
+        Task<List<FootballTeam>> GetAsync();
+        Task<FootballTeam> GetByIdAsync(int id);
+        Task<FootballTeam> GetByTeamNameAsync(string name);
+        Task<FootballTeam> AddAsync(FootballTeam team);
+        Task<FootballTeam> UpdateAsync(FootballTeam request);
+        Task DeleteAsync(FootballTeam team);
 
     }
 }

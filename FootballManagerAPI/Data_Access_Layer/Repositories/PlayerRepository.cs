@@ -13,16 +13,16 @@ namespace FootballManagerDAL.Repositories
             db = context;   
         }
         
-        public List<FootballPlayer> Get()
+        public async Task<List<FootballPlayer>> GetAsync()
         {
-            return db.FootballPlayers.Include(s => s.FootballTeam).ToList();
+            return await db.FootballPlayers.Include(s => s.FootballTeam).ToListAsync();
         }
 
-        public FootballPlayer GetById(int id)
+        public async Task<FootballPlayer> GetByIdAsync(int id)
         {
 
-            FootballPlayer player = db.FootballPlayers.Include(s => s.FootballTeam)
-                .AsNoTracking().FirstOrDefault(x => x.Id == id);
+            FootballPlayer player = await db.FootballPlayers.Include(s => s.FootballTeam)
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (player == null)
             {
@@ -32,50 +32,50 @@ namespace FootballManagerDAL.Repositories
             return player;
         }
 
-        public List<FootballPlayer> GetByFirstName(string firstName)
+        public async Task<List<FootballPlayer>> GetByFirstNameAsync(string firstName)
         {
-            List<FootballPlayer> players = db.FootballPlayers.Include(s => s.FootballTeam)
-                .Where(f => f.FirstName == firstName).ToList();
+            List<FootballPlayer> players = await db.FootballPlayers.Include(s => s.FootballTeam)
+                .Where(f => f.FirstName == firstName).ToListAsync();
 
             return players; 
         }
 
-        public List<FootballPlayer> GetByLastName(string lastName)
+        public async Task<List<FootballPlayer>> GetByLastNameAsync(string lastName)
         {
-            List<FootballPlayer> players = db.FootballPlayers.Include(s => s.FootballTeam)
-                .Where(l => l.LastName == lastName).ToList();
+            List<FootballPlayer> players = await db.FootballPlayers.Include(s => s.FootballTeam)
+                .Where(l => l.LastName == lastName).ToListAsync();
 
             return players;
         }
 
-        public FootballPlayer Add(FootballPlayer player)
+        public async Task<FootballPlayer> AddAsync(FootballPlayer player)
         {
             db.FootballPlayers.Add(player);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return player;
         }
 
-        public FootballPlayer Update(FootballPlayer request)
+        public async Task<FootballPlayer> UpdateAsync(FootballPlayer request)
         {
             db.FootballPlayers.Update(request);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return request;
         }
 
-        public FootballPlayer PatchUpdate(FootballPlayer requestPatch)
+        public async Task<FootballPlayer> PatchUpdateAsync(FootballPlayer requestPatch)
         {
             db.FootballPlayers.Update(requestPatch);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return requestPatch;
         }
 
-        public void Delete(FootballPlayer player)
+        public async Task DeleteAsync(FootballPlayer player)
         {
             db.FootballPlayers.Remove(player);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
         }
     }
 }

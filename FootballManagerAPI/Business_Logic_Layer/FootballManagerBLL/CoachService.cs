@@ -14,57 +14,57 @@ namespace FootballManagerBLL.FootballManagerBLL
             _coachRepository = coachRepository;
         }
 
-        public List<Coach> Get()
+        public async Task<List<Coach>> GetAsync()
         {
-            return _coachRepository.Get();
+            return await _coachRepository.GetAsync();
         }
-        public Coach? GetById(int id)
+        public async Task<Coach>? GetByIdAsync(int id)
         {
-            return _coachRepository.GetById(id);
+            return await _coachRepository.GetByIdAsync(id);
         }
-        public Coach? GetByFirstName(string firstName)
+        public async Task<Coach>? GetByFirstNameAsync(string firstName)
         {
-            return _coachRepository.GetByFirstName(firstName);
+            return await _coachRepository.GetByFirstNameAsync(firstName);
         }
-        public Coach? GetByLastName(string lastName)
+        public async Task<Coach>? GetByLastNameAsync(string lastName)
         {
-            return _coachRepository.GetByLastName(lastName);
+            return await _coachRepository.GetByLastNameAsync(lastName);
         }
-        public Coach? Add(Coach coach)
+        public async Task<Coach>? AddAsync(Coach coach)
         {
-            return _coachRepository.Add(coach);
+            return await _coachRepository.AddAsync(coach);
         }
-        public Coach? Update(Coach request)
+        public async Task<Coach>? UpdateAsync(Coach request)
         {
-            Coach? coach = _coachRepository.GetById(request.Id);
+            Coach? coach = await _coachRepository.GetByIdAsync(request.Id);
 
             if (coach == null)
             {
                 return null;
             }
 
-            return _coachRepository.Update(request);
+            return await _coachRepository.UpdateAsync(request);
         }
-        public Coach? PatchUpdate(Coach requestPatch)
+        public async Task<Coach>? PatchUpdateAsync(Coach requestPatch)
         {
-            Coach? coach = _coachRepository.GetById(requestPatch.Id);
+            Coach? coach = await _coachRepository.GetByIdAsync(requestPatch.Id);
 
             if (coach == null)
             {
                 return null;
             }
 
-            return _coachRepository.PatchUpdate(requestPatch);
+            return await _coachRepository.PatchUpdateAsync(requestPatch);
         }
-        public Coach? Delete(int id)
+        public async Task<Coach>? DeleteAsync(int id)
         {
-            Coach? coach = _coachRepository.GetById(id);
+            Coach? coach = await _coachRepository.GetByIdAsync(id);
 
             if (coach == null)
             {
                 return null;
             }
-            _coachRepository.Delete(coach);
+            await _coachRepository.DeleteAsync(coach);
 
             return coach;
         }

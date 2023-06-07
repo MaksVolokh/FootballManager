@@ -13,64 +13,64 @@ namespace FootballManagerBLL.FootballManagerBLL
             _repository = repository;
         }
 
-        public List<FootballPlayer> Get()
+        public async Task<List<FootballPlayer>> GetAsync()
         {
-            return _repository.Get();
+            return await _repository.GetAsync();
         }
 
-        public FootballPlayer? GetById(int id)
+        public async Task<FootballPlayer>? GetByIdAsync(int id)
         {
-            return _repository.GetById(id);
+            return await _repository.GetByIdAsync(id);
         }
 
-        public List<FootballPlayer> GetByFirstName(string firstName)
+        public async Task<List<FootballPlayer>> GetByFirstNameAsync(string firstName)
         {
-            return _repository.GetByFirstName(firstName);
+            return await _repository.GetByFirstNameAsync(firstName);
         }
 
-        public List<FootballPlayer> GetByLastName(string lastName)
+        public async Task<List<FootballPlayer>> GetByLastNameAsync(string lastName)
         {
-            return _repository.GetByLastName(lastName);
+            return await _repository.GetByLastNameAsync(lastName);
         }
 
-        public FootballPlayer? Add(FootballPlayer player)
+        public async Task<FootballPlayer>? AddAsync(FootballPlayer player)
         {
-            return _repository.Add(player);
+            return await _repository.AddAsync(player);
         }
 
-        public FootballPlayer? Update(FootballPlayer request)
+        public async Task<FootballPlayer>? UpdateAsync(FootballPlayer request)
         {
-            FootballPlayer? player = _repository.GetById(request.Id);
+            FootballPlayer? player = await _repository.GetByIdAsync(request.Id);
 
             if (player == null)
             {
                 return null;
             }
 
-            return _repository.Update(request);
+            return await _repository.UpdateAsync(request);
         }
 
-        public FootballPlayer? PatchUpdate(FootballPlayer requestPatch)
+        public async Task<FootballPlayer>? PatchUpdateAsync(FootballPlayer requestPatch)
         {
-            FootballPlayer? player = _repository.GetById(requestPatch.Id);
+            FootballPlayer? player = await _repository.GetByIdAsync(requestPatch.Id);
 
             if (player == null)
             {
                 return null;
             }
 
-            return _repository.PatchUpdate(requestPatch);
+            return await _repository.PatchUpdateAsync(requestPatch);
         }
 
-        public FootballPlayer? Delete(int id)
+        public async Task<FootballPlayer>? DeleteAsync(int id)
         {
-            FootballPlayer? player = _repository.GetById(id);
+            FootballPlayer? player = await _repository.GetByIdAsync(id);
 
             if (player == null)
             {
                 return null;
             }
-            _repository.Delete(player);
+            await _repository.DeleteAsync(player);
 
             return player;
         }

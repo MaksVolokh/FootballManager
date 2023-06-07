@@ -13,16 +13,16 @@ namespace FootballManagerDAL.Repositories
         {
             dbcoach = context;
         }
-        public List<Coach> Get()
+        public async Task<List<Coach>> GetAsync()
         {
-            return dbcoach.CoachForTeam.Include(s => s.FootballTeam).ToList();
+            return await dbcoach.CoachForTeam.Include(s => s.FootballTeam).ToListAsync();
         }
 
-        public Coach GetById(int id)
+        public async Task<Coach> GetByIdAsync(int id)
         {
 
-            Coach coach = dbcoach.CoachForTeam.Include(s => s.FootballTeam)
-                .AsNoTracking().FirstOrDefault(x => x.Id == id);
+            Coach coach = await dbcoach.CoachForTeam.Include(s => s.FootballTeam)
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (coach == null)
             {
@@ -32,50 +32,50 @@ namespace FootballManagerDAL.Repositories
             return coach;
         }
 
-        public Coach GetByFirstName(string firstName)
+        public async Task<Coach> GetByFirstNameAsync(string firstName)
         {
-            Coach coach = dbcoach.CoachForTeam.Include(s => s.FootballTeam)
-                .Where(f => f.FirstName == firstName).FirstOrDefault();
+            Coach coach = await dbcoach.CoachForTeam.Include(s => s.FootballTeam)
+                .Where(f => f.FirstName == firstName).FirstOrDefaultAsync();
 
             return coach;
         }
 
-        public Coach GetByLastName(string lastName)
+        public async Task<Coach> GetByLastNameAsync(string lastName)
         {
-            Coach coach = dbcoach.CoachForTeam.Include(s => s.FootballTeam)
-                .Where(l => l.LastName == lastName).FirstOrDefault();
+            Coach coach = await dbcoach.CoachForTeam.Include(s => s.FootballTeam)
+                .Where(l => l.LastName == lastName).FirstOrDefaultAsync();
 
             return coach;
         }
 
-        public Coach Add(Coach coach)
+        public async Task<Coach> AddAsync(Coach coach)
         {
             dbcoach.CoachForTeam.Add(coach);
-            dbcoach.SaveChanges();
+            await dbcoach.SaveChangesAsync();
 
             return coach;
         }
 
-        public Coach Update(Coach request)
+        public async Task<Coach> UpdateAsync(Coach request)
         {
             dbcoach.CoachForTeam.Update(request);
-            dbcoach.SaveChanges();
+            await dbcoach.SaveChangesAsync();
 
             return request;
         }
 
-        public Coach PatchUpdate(Coach requestPatch)
+        public async Task<Coach> PatchUpdateAsync(Coach requestPatch)
         {
             dbcoach.CoachForTeam.Update(requestPatch);
-            dbcoach.SaveChanges();
+            await dbcoach.SaveChangesAsync();
 
             return requestPatch;
         }
 
-        public void Delete(Coach coach)
+        public async Task DeleteAsync(Coach coach)
         { 
             dbcoach.CoachForTeam.Remove(coach);
-            dbcoach.SaveChanges();
+            await dbcoach.SaveChangesAsync();
         }
     }
 }

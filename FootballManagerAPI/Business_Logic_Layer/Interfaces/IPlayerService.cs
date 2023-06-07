@@ -4,13 +4,13 @@ namespace FootballManagerBLL.Interfaces
 {
     public interface IPlayerService
     {
-        List<FootballPlayer> Get();
-        FootballPlayer? GetById(int id);
-        List<FootballPlayer> GetByFirstName(string firstName);
-        List<FootballPlayer> GetByLastName(string lastName);
-        FootballPlayer? Add(FootballPlayer player);
-        FootballPlayer? Update(FootballPlayer request);
-        FootballPlayer? PatchUpdate(FootballPlayer request);
-        public FootballPlayer? Delete(int id);
+        Task<List<FootballPlayer>> GetAsync();
+        Task<FootballPlayer>? GetByIdAsync(int id);
+        Task<List<FootballPlayer>> GetByFirstNameAsync(string firstName);
+        Task<List<FootballPlayer>> GetByLastNameAsync(string lastName);
+        Task<FootballPlayer>? AddAsync(FootballPlayer player);
+        Task<FootballPlayer>? UpdateAsync(FootballPlayer request);
+        Task<FootballPlayer>? PatchUpdateAsync(FootballPlayer request);
+        Task<FootballPlayer>? DeleteAsync(int id);
     }
 }

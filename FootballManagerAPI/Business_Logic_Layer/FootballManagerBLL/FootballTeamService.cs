@@ -13,48 +13,48 @@ namespace FootballManagerBLL.FootballManagerBLL
             footballTeamRepository = repository;
         }
 
-        public List<FootballTeam> Get()
+        public async Task<List<FootballTeam>> GetAsync()
         {
-            return footballTeamRepository.Get();
+            return await footballTeamRepository.GetAsync();
         }
 
-        public FootballTeam? GetById(int id)
+        public async Task<FootballTeam>? GetByIdAsync(int id)
         {
-            return footballTeamRepository.GetById(id);
+            return await footballTeamRepository.GetByIdAsync(id);
         }
 
-        public FootballTeam? GetByTeamName(string name)
+        public async Task<FootballTeam>? GetByTeamNameAsync(string name)
         {
-            return footballTeamRepository.GetByTeamName(name);
+            return await footballTeamRepository.GetByTeamNameAsync(name);
         }
 
-        public FootballTeam Add(FootballTeam team)
+        public async Task<FootballTeam> AddAsync(FootballTeam team)
         {
-            return footballTeamRepository.Add(team);
+            return await footballTeamRepository.AddAsync(team);
         }
 
-        public FootballTeam? Update(FootballTeam request)
+        public async Task<FootballTeam>? UpdateAsync(FootballTeam request)
         {
-            FootballTeam? team = footballTeamRepository.GetById(request.Id);
+            FootballTeam? team = await footballTeamRepository.GetByIdAsync(request.Id);
 
             if (team == null)
             {
                 return null;
             }
-            footballTeamRepository.Update(request);
+            await footballTeamRepository.UpdateAsync(request);
 
             return request;
         }
 
-        public FootballTeam? Delete(int id)
+        public async Task<FootballTeam>? DeleteAsync(int id)
         {
-            FootballTeam? team = footballTeamRepository.GetById(id);
+            FootballTeam? team = await footballTeamRepository.GetByIdAsync(id);
 
             if (team == null)
             { 
                 return null;
             }
-            footballTeamRepository.Delete(team);
+            await footballTeamRepository.DeleteAsync(team);
 
             return team;
         }
