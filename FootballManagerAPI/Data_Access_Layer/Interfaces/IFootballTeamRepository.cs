@@ -12,7 +12,7 @@ namespace FootballManagerDAL.Interfaces
     {
         Task<List<FootballTeam>> GetAsync();
         Task<FootballTeam> GetByIdAsync(int id);
-        Task<FootballTeam> GetByTeamNameAsync(string name);
+        Task<FootballTeam> GetTeamNameAsync(string name);
         Task<FootballTeam> AddAsync(FootballTeam team);
         Task<FootballTeam> UpdateAsync(FootballTeam request);
         Task DeleteAsync(FootballTeam team);

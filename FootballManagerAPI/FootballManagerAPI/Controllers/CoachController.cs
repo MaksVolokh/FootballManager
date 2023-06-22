@@ -1,5 +1,6 @@
-﻿using FootballManagerBLL.Interfaces;
-using FootballManagerDAL.Entities;
+﻿using FootballManagerBLL.Dto.RequestDto.Coach;
+using FootballManagerBLL.Dto.ResponceDto.Coach;
+using FootballManagerBLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,47 +19,47 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<List<Coach>>> GetAsync()
+        public async Task<ActionResult<List<CoachResponseDto>>> GetAsync()
         {
-            List<Coach> coaches = await _service.GetAsync();
+            var coaches = await _service.GetAsync();
 
             if (coaches.Count == 0)
             {
                 return NotFound("Coach is not found!");
             }
 
-            return coaches;
+            return Ok(coaches);
         }
 
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Coach>> GetByIdAsync(int id)
+        public async Task<ActionResult<CoachResponseDto>> GetByIdAsync(int id)
         {
             if (id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            Coach coach = await _service.GetByIdAsync(id);
+            var coach = await _service.GetByIdAsync(id);
 
             if (coach == null)
             {
                 return NotFound("Coach is not found!");
             }
 
-            return coach;
+            return Ok(coach);
         }
 
 
         [HttpGet("searchByQuery")]
-        public async Task<ActionResult<Coach>> GetByFirstNameAsync([FromQuery] string firstName)
+        public async Task<ActionResult<CoachResponseDto>> GetByFirstNameAsync([FromQuery] string firstName)
         {
-            if (firstName is not string)
+            if (string.IsNullOrEmpty(firstName))
             {
-                return BadRequest("First name should be string!");
+                return BadRequest("First name should not be empty!");
             }
 
-            Coach coach = await _service.GetByFirstNameAsync(firstName);
+            var coach = await _service.GetByFirstNameAsync(firstName);
 
             if (coach == null)
             {
@@ -70,14 +71,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet("searchByQuerylN")]
-        public async Task<ActionResult<Coach>> GetByLastNameAsync([FromQuery] string lastName)
+        public async Task<ActionResult<CoachResponseDto>> GetByLastNameAsync([FromQuery] string lastName)
         {
-            if (lastName is not string)
+            if (string.IsNullOrEmpty(lastName))
             {
-                return BadRequest("Last name should be string!");
+                return BadRequest("Last name should not be empty!");
             }
 
-            Coach coach = await _service.GetByLastNameAsync(lastName);
+            var coach = await _service.GetByLastNameAsync(lastName);
 
             if (coach == null)
             {
@@ -89,61 +90,81 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpPost("AddCoach")]
-        public async Task<ActionResult<Coach>> AddAsync(Coach coach)
+        public async Task<ActionResult<CoachResponseDto>> AddAsync([FromBody] CoachRequestDto coachDto)
         {
-            await _service.AddAsync(coach);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            return Ok(coach);
+            var addedCoach = await _service.AddAsync(coachDto);
+
+            if (addedCoach == null)
+            {
+                return BadRequest("Failed to add coach!");
+            }
+
+            return Ok(addedCoach);
         }
 
 
         [HttpPut("UpdateCoach")]
-        public async Task<ActionResult<Coach>> UpdateAsync(Coach request)
-        {
-            if (request.Id < 0)
-            {
-                return BadRequest("Id should be positive number!");
-            }
-
-            Coach coach = await _service.UpdateAsync(request);
-
-            if (coach == null)
-            {
-                return NotFound("Coach is not found!");
-            }
-
-            return Ok(request);
-        }
-
-
-        [HttpPatch("PatchUpdateCoach")]
-        public async Task<ActionResult<Coach>> PatchUpdateAsync(Coach requestPatch)
-        {
-            if (requestPatch.Id < 0)
-            {
-                return BadRequest("Id should be positive number!");
-            }
-
-            Coach coach = await _service.PatchUpdateAsync(requestPatch);
-
-            if (coach == null)
-            {
-                return NotFound("Coach is not found!");
-            }
-
-            return Ok(requestPatch);
-        }
-
-
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult<Coach>> DeleteAsync(int id)
+        public async Task<ActionResult<CoachResponseDto>> UpdateAsync(int id, [FromBody] CoachRequestDto request)
         {
             if (id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            Coach coach = await _service.DeleteAsync(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var coach = await _service.UpdateAsync(id, request);
+
+            if (coach == null)
+            {
+                return NotFound("Coach is not found!");
+            }
+
+            return Ok(coach);
+        }
+
+
+        [HttpPatch("PatchUpdateCoach")]
+        public async Task<ActionResult<CoachResponseDto>> PatchUpdateAsync(int id, [FromBody] CoachRequestDto requestPatch)
+        {
+            if (id < 0)
+            {
+                return BadRequest("Id should be positive number!");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var coach = await _service.PatchUpdateAsync(id, requestPatch);
+
+            if (coach == null)
+            {
+                return NotFound("Coach is not found!");
+            }
+
+            return Ok(coach);
+        }
+
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<CoachResponseDto>> DeleteAsync(int id)
+        {
+            if (id < 0)
+            {
+                return BadRequest("Id should be positive number!");
+            }
+
+            var coach = await _service.DeleteAsync(id);
 
             if (coach == null)
             {

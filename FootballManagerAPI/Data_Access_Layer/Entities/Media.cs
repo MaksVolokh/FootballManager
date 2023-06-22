@@ -13,9 +13,5 @@ namespace FootballManagerDAL.Entities
         public string Description { get; set; }
         public string VideoUrl { get; set; }
         public string PhotoUrl { get; set; }
-
-        // navigation properties
-        public int FootballTeamId { get; set; }
-        public FootballTeam FootballTeam { get; set; }
     }
 }

@@ -1,16 +1,19 @@
 ﻿using FootballManagerAPI.Controllers.Entities;
+using FootballManagerBLL.Dto.RequestDto.Player;
+using FootballManagerBLL.Dto.ResponceDto.Player;
 
 namespace FootballManagerBLL.Interfaces
 {
     public interface IPlayerService
     {
-        Task<List<FootballPlayer>> GetAsync();
-        Task<FootballPlayer>? GetByIdAsync(int id);
-        Task<List<FootballPlayer>> GetByFirstNameAsync(string firstName);
-        Task<List<FootballPlayer>> GetByLastNameAsync(string lastName);
-        Task<FootballPlayer>? AddAsync(FootballPlayer player);
-        Task<FootballPlayer>? UpdateAsync(FootballPlayer request);
-        Task<FootballPlayer>? PatchUpdateAsync(FootballPlayer request);
-        Task<FootballPlayer>? DeleteAsync(int id);
+        Task<List<FootballPlayerResponseDto>> GetAsync();
+        Task<FootballPlayerResponseDto>? GetByIdAsync(int id);
+        Task<List<FootballPlayerResponseDto>> GetByFirstNameAsync(string firstName);
+        Task<List<FootballPlayerResponseDto>> GetByLastNameAsync(string lastName);
+        Task<FootballPlayerResponseDto>? AddAsync(FootballPlayerRequestDto player);
+        Task<FootballPlayerResponseDto>? UpdateAsync(int id, FootballPlayerRequestDto request);
+        Task<FootballPlayerResponseDto>? PatchUpdateAsync(int id, FootballPlayerRequestDto request);
+        Task<FootballPlayerResponseDto>? DeleteAsync(int id);
+        Task<bool> IsPlayerNumberAvailable(int number);
     }
 }

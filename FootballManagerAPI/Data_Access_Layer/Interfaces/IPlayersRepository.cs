@@ -12,5 +12,6 @@ namespace FootballManagerDAL.Interfaces
         Task<FootballPlayer> UpdateAsync(FootballPlayer request);
         Task<FootballPlayer> PatchUpdateAsync(FootballPlayer request); 
         Task DeleteAsync(FootballPlayer player);
+        Task<FootballPlayer> GetPlayerByNumberAsync(int number);
     }
 }

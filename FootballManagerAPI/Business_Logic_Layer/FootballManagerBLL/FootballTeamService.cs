@@ -1,62 +1,78 @@
-﻿using FootballManagerBLL.Interfaces;
-using FootballManagerDAL.Entities;
+﻿using FootballManagerBLL.Dto.ConverterDto.FootballTeamConverter;
+using FootballManagerBLL.Dto.RequestDto.FootballTeam;
+using FootballManagerBLL.Dto.ResponceDto.FootballTeam;
+using FootballManagerBLL.Interfaces;
 using FootballManagerDAL.Interfaces;
 
 namespace FootballManagerBLL.FootballManagerBLL
 {
-    public class FootballTeamService : IFootballTeam
+    public class FootballTeamService : IFootballTeamService
     {
-        private readonly IFootballTeamRepository footballTeamRepository;
+        private readonly IFootballTeamRepository _repository;
 
         public FootballTeamService(IFootballTeamRepository repository)
         {
-            footballTeamRepository = repository;
+            _repository = repository;
         }
 
-        public async Task<List<FootballTeam>> GetAsync()
+        public async Task<List<FootballTeamResponseDto>> GetAsync()
         {
-            return await footballTeamRepository.GetAsync();
+            var teams = await _repository.GetAsync();
+
+            return teams.Select(FootballTeamConverter.ConvertToDto).ToList();
         }
 
-        public async Task<FootballTeam>? GetByIdAsync(int id)
+        public async Task<FootballTeamResponseDto>? GetByIdAsync(int id)
         {
-            return await footballTeamRepository.GetByIdAsync(id);
+            var team = await _repository.GetByIdAsync(id);
+
+            return FootballTeamConverter.ConvertToDto(team);
         }
 
-        public async Task<FootballTeam>? GetByTeamNameAsync(string name)
+        public async Task<FootballTeamResponseDto>? GetTeamNameAsync(string name)
         {
-            return await footballTeamRepository.GetByTeamNameAsync(name);
+            var team = await _repository.GetTeamNameAsync(name);
+
+            return FootballTeamConverter.ConvertToDto(team);
         }
 
-        public async Task<FootballTeam> AddAsync(FootballTeam team)
+        public async Task<FootballTeamResponseDto> AddAsync(FootballTeamRequestDto teamDto)
         {
-            return await footballTeamRepository.AddAsync(team);
+            var team = FootballTeamConverter.ConvertToEntity(teamDto);
+
+            var addedTeam = await _repository.AddAsync(team);
+
+            return FootballTeamConverter.ConvertToDto(addedTeam);
         }
 
-        public async Task<FootballTeam>? UpdateAsync(FootballTeam request)
+        public async Task<FootballTeamResponseDto>? UpdateAsync(int id, FootballTeamRequestDto request)
         {
-            FootballTeam? team = await footballTeamRepository.GetByIdAsync(request.Id);
+            var team = await _repository.GetByIdAsync(id);
 
             if (team == null)
             {
                 return null;
             }
-            await footballTeamRepository.UpdateAsync(request);
 
-            return request;
+            FootballTeamConverter.UpdateEntity(team, request);
+
+            var updatedTeam = await _repository.UpdateAsync(team);
+
+            return FootballTeamConverter.ConvertToDto(updatedTeam);
         }
 
-        public async Task<FootballTeam>? DeleteAsync(int id)
+        public async Task<FootballTeamResponseDto>? DeleteAsync(int id)
         {
-            FootballTeam? team = await footballTeamRepository.GetByIdAsync(id);
+            var team = await _repository.GetByIdAsync(id);
 
             if (team == null)
-            { 
+            {
                 return null;
             }
-            await footballTeamRepository.DeleteAsync(team);
 
-            return team;
+            await _repository.DeleteAsync(team);
+
+            return FootballTeamConverter.ConvertToDto(team);
         }
     }
 }

@@ -10,8 +10,8 @@ using FootballManagerDAL.Interfaces;
 using FootballManagerBLL.Interfaces;
 using FootballManagerBLL.FootballManagerBLL;
 using FootballManagerDAL.Repositories;
-using FootballManagerDAL.Entities;
 using Microsoft.AspNetCore.Identity;
+using FootballManagerBLL.Dto;
 
 namespace FootballManagerAPI
 {
@@ -35,19 +35,38 @@ namespace FootballManagerAPI
             services.AddDbContext<DataContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<DataContext>()
+                .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/UserAuthentication/Login");
+
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FootballManagerAPI", Version = "v1" });
             });
 
+            services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
 
             services.AddScoped<IPlayerService, PlayerService>();
             services.AddScoped<IPlayersRepository, PlayerRepository>();
+
             services.AddScoped<ICoachService, CoachService>();
             services.AddScoped<ICoachRepository, CoachRepository>();
-            services.AddScoped<IFootballTeam, FootballTeamService>();
+
+            services.AddScoped<IFootballTeamService, FootballTeamService>();
             services.AddScoped<IFootballTeamRepository, FootballTeamRepository>();
+
+            services.AddScoped<IStatisticsService, PlayerStatisticsService>();
+            services.AddScoped<IFootballPlayerStatisticsRepository, FootballPlayerStatisticsRepository>();
+
+            services.AddScoped<IMatchService, MatchService>();
+            services.AddScoped<IFootballMatchRepository, FootballMatchRepository>();
+
+            services.AddScoped<IMediaService, MediaService>();
+            services.AddScoped<IMediaRepository,  MediaRepository>();
+
             services.AddMvc();
         }
 

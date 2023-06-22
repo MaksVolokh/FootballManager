@@ -77,5 +77,10 @@ namespace FootballManagerDAL.Repositories
             db.FootballPlayers.Remove(player);
             await db.SaveChangesAsync();
         }
+
+        public async Task<FootballPlayer> GetPlayerByNumberAsync(int number)
+        {
+            return await db.FootballPlayers.FirstOrDefaultAsync(p => p.Number == number);
+        }
     }
 }

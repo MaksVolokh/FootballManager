@@ -1,12 +1,7 @@
 ﻿using FootballManagerAPI.Controllers.Entities;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace FootballManagerDAL.Entities
 {
@@ -26,6 +21,7 @@ namespace FootballManagerDAL.Entities
         public int PlayerId { get; set; }
         public FootballPlayer FootballPlayer { get; set; }
 
+        public FootballPlayerStatistics() { }
         public FootballPlayerStatistics(int id, int matchesPlayed, int goalsScored, int assists, 
             int yellowCards, int redCards, double averageScoreByNote)
         {

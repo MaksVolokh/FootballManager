@@ -32,7 +32,7 @@ namespace FootballManagerDAL.Repositories
             return team;
         }
 
-        public async Task<FootballTeam> GetByTeamNameAsync(string teamName)
+        public async Task<FootballTeam> GetTeamNameAsync(string teamName)
         {
             FootballTeam team = await dataContext.FootballTeams.Include(s => s.Coach)
                 .FirstOrDefaultAsync(f => f.TeamName == teamName);

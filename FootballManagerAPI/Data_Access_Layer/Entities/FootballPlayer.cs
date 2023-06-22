@@ -17,6 +17,10 @@ namespace FootballManagerAPI.Controllers.Entities
         public int? TeamId { get; set; }
         public FootballTeam FootballTeam { get; set; }
 
+        public FootballPlayer()
+        {
+
+        }
         public FootballPlayer(int id, string firstName, string lastName, int number)
         {
             this.Id = id;

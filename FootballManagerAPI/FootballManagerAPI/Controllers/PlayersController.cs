@@ -1,4 +1,5 @@
-﻿using FootballManagerAPI.Controllers.Entities;
+﻿using FootballManagerBLL.Dto.RequestDto.Player;
+using FootballManagerBLL.Dto.ResponceDto.Player;
 using FootballManagerBLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -18,47 +19,47 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<List<FootballPlayer>>> GetAsync()
+        public async Task<ActionResult<List<FootballPlayerResponseDto>>> GetAsync()
         {
-            List<FootballPlayer> players = await _service.GetAsync();
+            var players = await _service.GetAsync();
 
             if (players.Count == 0)
-            {   
+            {
                 return NotFound("Players is not found!");
             }
 
-            return players;
+            return Ok(players);
         }
 
 
         [HttpGet("{id:int}")] 
-        public async Task<ActionResult<FootballPlayer>> GetPlayerByIdAsync(int id)
+        public async Task<ActionResult<FootballPlayerResponseDto>> GetPlayerByIdAsync(int id)
         {
             if(id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            FootballPlayer player = await _service.GetByIdAsync(id);
+            var player = await _service.GetByIdAsync(id);
 
             if (player == null)
             {
                 return NotFound("Player is not found!");
             }
 
-            return player;
+            return Ok(player);
         }
           
 
         [HttpGet("searchByQuery")]
-        public async Task<ActionResult<List<FootballPlayer>>> GetByFirstNameAsync([FromQuery] string firstName)
+        public async Task<ActionResult<List<FootballPlayerResponseDto>>> GetByFirstNameAsync([FromQuery] string firstName)
         {
-            if (firstName is not string)
+            if (string.IsNullOrEmpty(firstName))
             {
-                return BadRequest("First name should be string!");
+                return BadRequest("First name should not be empty!");
             }
 
-            List<FootballPlayer> player = await _service.GetByFirstNameAsync(firstName);
+            var player = await _service.GetByFirstNameAsync(firstName);
 
             if (player.Count == 0)
             {
@@ -70,14 +71,14 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpGet("searchByQuerylN")]
-        public async Task<ActionResult<List<FootballPlayer>>> GetByLastNameAsync([FromQuery] string lastName)
+        public async Task<ActionResult<List<FootballPlayerResponseDto>>> GetByLastNameAsync([FromQuery] string lastName)
         {
-            if (lastName is not string)
+            if (string.IsNullOrEmpty(lastName))
             {
-                return BadRequest("Last name should be string!");
+                return BadRequest("Last name should not be empty!");
             }
 
-            List<FootballPlayer> player = await _service.GetByLastNameAsync(lastName);
+            var player = await _service.GetByLastNameAsync(lastName);
 
             if (player.Count == 0)
             {
@@ -89,61 +90,89 @@ namespace FootballManagerAPI.Controllers
          
 
         [HttpPost("Add")]
-        public async Task<ActionResult<FootballPlayer>> AddAsync(FootballPlayer player)
-        { 
-            await _service.AddAsync(player);
+        public async Task<ActionResult<FootballPlayerResponseDto>> AddAsync([FromBody] FootballPlayerRequestDto player)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            return Ok(player);
+            bool isNumberAvailable = await _service.IsPlayerNumberAvailable(player.Number);
+
+            if (!isNumberAvailable)
+            {
+                ModelState.AddModelError(nameof(FootballPlayerRequestDto.Number), "This player number is already taken. Please choose another number.");
+                return BadRequest(ModelState);
+            }
+
+            var addedPlayer = await _service.AddAsync(player);
+
+            if (addedPlayer == null)
+            {
+                return BadRequest("Failed to add player!");
+            }
+
+            return Ok(addedPlayer);
         } 
 
 
         [HttpPut("Update")] 
-        public async Task<ActionResult<FootballPlayer>> UpdateAsync(FootballPlayer request)
+        public async Task<ActionResult<FootballPlayerResponseDto>> UpdateAsync(int id, [FromBody] FootballPlayerRequestDto request)
           {
-            if (request.Id < 0)
+            if (id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            FootballPlayer player = await _service.UpdateAsync(request);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var player = await _service.UpdateAsync(id, request);
 
             if (player == null)
             { 
                 return NotFound("Player is not found!");
             }
 
-            return Ok(request);
+            return Ok(player);
         }
 
 
         [HttpPatch("PatchUpdate")]
-        public async Task<ActionResult<FootballPlayer>> PatchUpdateAsync(FootballPlayer requestPatch)
-        {
-            if (requestPatch.Id < 0)
-            {
-                return BadRequest("Id should be positive number!");
-            }
-
-            FootballPlayer player = await _service.PatchUpdateAsync(requestPatch);
-
-            if (player == null)
-            {
-                return NotFound("Player is not found!");
-            }
-
-            return Ok(requestPatch);
-        }
-
-
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult<FootballPlayer>> DeleteAsync(int id)
+        public async Task<ActionResult<FootballPlayerResponseDto>> PatchUpdateAsync(int id, [FromBody] FootballPlayerRequestDto request)
         {
             if (id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            FootballPlayer player = await _service.DeleteAsync(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var player = await _service.PatchUpdateAsync(id, request);
+
+            if (player == null)
+            {
+                return NotFound("Player is not found!");
+            }
+
+            return Ok(player);
+        }
+
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<FootballPlayerResponseDto>> DeleteAsync(int id)
+        {
+            if (id < 0)
+            {
+                return BadRequest("Id should be positive number!");
+            }
+
+            var player = await _service.DeleteAsync(id);
 
             if (player == null)
             {

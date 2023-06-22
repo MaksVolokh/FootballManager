@@ -1,5 +1,7 @@
-﻿using FootballManagerBLL.Interfaces;
-using FootballManagerDAL.Entities;
+﻿using FootballManagerBLL.Dto.ConverterDto.CoachConverter;
+using FootballManagerBLL.Dto.RequestDto.Coach;
+using FootballManagerBLL.Dto.ResponceDto.Coach;
+using FootballManagerBLL.Interfaces;
 using FootballManagerDAL.Interfaces;
 
 
@@ -14,51 +16,73 @@ namespace FootballManagerBLL.FootballManagerBLL
             _coachRepository = coachRepository;
         }
 
-        public async Task<List<Coach>> GetAsync()
+        public async Task<List<CoachResponseDto>> GetAsync()
         {
-            return await _coachRepository.GetAsync();
+            var coaches = await _coachRepository.GetAsync();
+
+            return coaches.Select(CoachConverter.ConvertToResponseDto).ToList();
         }
-        public async Task<Coach>? GetByIdAsync(int id)
+        public async Task<CoachResponseDto>? GetByIdAsync(int id)
         {
-            return await _coachRepository.GetByIdAsync(id);
+            var coach = await _coachRepository.GetByIdAsync(id);
+
+            return CoachConverter.ConvertToResponseDto(coach);
         }
-        public async Task<Coach>? GetByFirstNameAsync(string firstName)
+    
+        public async Task<CoachResponseDto>? GetByFirstNameAsync(string firstName)
         {
-            return await _coachRepository.GetByFirstNameAsync(firstName);
+            var coach = await _coachRepository.GetByFirstNameAsync(firstName);
+
+            return CoachConverter.ConvertToResponseDto(coach);
         }
-        public async Task<Coach>? GetByLastNameAsync(string lastName)
+        public async Task<CoachResponseDto>? GetByLastNameAsync(string lastName)
         {
-            return await _coachRepository.GetByLastNameAsync(lastName);
+            var coach = await _coachRepository.GetByFirstNameAsync(lastName);
+
+            return CoachConverter.ConvertToResponseDto(coach);
         }
-        public async Task<Coach>? AddAsync(Coach coach)
+        public async Task<CoachResponseDto>? AddAsync(CoachRequestDto coach)
         {
-            return await _coachRepository.AddAsync(coach);
+            var newcoach = CoachConverter.ConvertToEntity(coach);
+
+            var addedCoach = await _coachRepository.AddAsync(newcoach);
+
+            return CoachConverter.ConvertToResponseDto(addedCoach);
         }
-        public async Task<Coach>? UpdateAsync(Coach request)
+        public async Task<CoachResponseDto>? UpdateAsync(int id, CoachRequestDto request)
         {
-            Coach? coach = await _coachRepository.GetByIdAsync(request.Id);
+            var coach = await _coachRepository.GetByIdAsync(id);
 
             if (coach == null)
             {
                 return null;
             }
 
-            return await _coachRepository.UpdateAsync(request);
+            CoachConverter.UpdateEntityFromRequest(coach, request);
+
+            var updatedPlayer = await _coachRepository.UpdateAsync(coach);
+
+            return CoachConverter.ConvertToResponseDto(updatedPlayer);
         }
-        public async Task<Coach>? PatchUpdateAsync(Coach requestPatch)
+
+        public async Task<CoachResponseDto>? PatchUpdateAsync(int id, CoachRequestDto requestPatch)
         {
-            Coach? coach = await _coachRepository.GetByIdAsync(requestPatch.Id);
+            var coach = await _coachRepository.GetByIdAsync(id);
 
             if (coach == null)
             {
                 return null;
             }
 
-            return await _coachRepository.PatchUpdateAsync(requestPatch);
+            CoachConverter.UpdateEntityFromRequest(coach, requestPatch);
+
+            var patchedCoach = await _coachRepository.PatchUpdateAsync(coach);
+
+            return CoachConverter.ConvertToResponseDto(patchedCoach);
         }
-        public async Task<Coach>? DeleteAsync(int id)
+        public async Task<CoachResponseDto>? DeleteAsync(int id)
         {
-            Coach? coach = await _coachRepository.GetByIdAsync(id);
+            var coach = await _coachRepository.GetByIdAsync(id);
 
             if (coach == null)
             {
@@ -66,7 +90,7 @@ namespace FootballManagerBLL.FootballManagerBLL
             }
             await _coachRepository.DeleteAsync(coach);
 
-            return coach;
+            return CoachConverter.ConvertToResponseDto(coach);
         }
     }
 }

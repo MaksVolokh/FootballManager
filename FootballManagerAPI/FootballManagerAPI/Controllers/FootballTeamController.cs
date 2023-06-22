@@ -1,5 +1,6 @@
-﻿using FootballManagerBLL.Interfaces;
-using FootballManagerDAL.Entities;
+﻿using FootballManagerBLL.Dto.RequestDto.FootballTeam;
+using FootballManagerBLL.Dto.ResponceDto.FootballTeam;
+using FootballManagerBLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,55 +11,55 @@ namespace FootballManagerAPI.Controllers
     [ApiController]
     public class FootballTeamController : ControllerBase
     {
-        private readonly IFootballTeam _service;
-        public FootballTeamController(IFootballTeam service)
+        private readonly IFootballTeamService _service;
+        public FootballTeamController(IFootballTeamService service)
         {
             _service = service;
         }
 
 
         [HttpGet]
-        public async Task<ActionResult<List<FootballTeam>>> GetAsync()
+        public async Task<ActionResult<List<FootballTeamResponseDto>>> GetAsync()
         {
-            List<FootballTeam> teams = await _service.GetAsync();
+            var teams = await _service.GetAsync();
 
             if (teams.Count == 0)
             {
                 return NotFound("Team is not found!");
             }
 
-            return teams;
+            return Ok(teams);
         }
 
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<FootballTeam>> GetByIdAsync(int id)
+        public async Task<ActionResult<FootballTeamResponseDto>> GetByIdAsync(int id)
         {
             if (id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            FootballTeam team = await _service.GetByIdAsync(id);
+            var team = await _service.GetByIdAsync(id);
 
             if (team == null)
             {
                 return NotFound("Team is not found!");
             }
 
-            return team;
+            return Ok(team);
         }
 
 
         [HttpGet("searchByQuery")]
-        public async Task<ActionResult<FootballTeam>> GetByTeamNameAsync([FromQuery] string teamname)
+        public async Task<ActionResult<FootballTeamResponseDto>> GetTeamNameAsync([FromQuery] string teamName)
         {
-            if (teamname is not string)
+            if (string.IsNullOrEmpty(teamName))
             {
-                return BadRequest("Team name should be string!");
+                return BadRequest("Team name should not be empty!");
             }
 
-            FootballTeam team = await _service.GetByTeamNameAsync(teamname);
+            var team = await _service.GetTeamNameAsync(teamName);
 
             if (team == null)
             {
@@ -70,42 +71,57 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpPost("Add")]
-        public async Task<ActionResult<FootballTeam>> AddAsync(FootballTeam team)
+        public async Task<ActionResult<FootballTeamResponseDto>> AddAsync([FromBody] FootballTeamRequestDto team)
         {
-            await _service.AddAsync(team);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            return Ok(team);
+            var addedTeam = await _service.AddAsync(team);
+
+            if (addedTeam == null)
+            {
+                return BadRequest("Failed to add team!");
+            }
+
+            return Ok(addedTeam);
         }
 
 
         [HttpPut("Update")]
-        public async Task<ActionResult<FootballTeam>> UpdateAsync(FootballTeam request)
-        {
-            if (request.Id < 0)
-            {
-                return BadRequest("Id should be positive number!");
-            }
-
-            FootballTeam team = await _service.UpdateAsync(request);
-
-            if (team == null)
-            {
-                return NotFound("Team is not found!");
-            }
-
-            return request;
-        }
-
-
-        [HttpDelete("{id:int}")]
-        public async Task<ActionResult<FootballTeam>> DeleteAsync(int id)
+        public async Task<ActionResult<FootballTeamRequestDto>> UpdateAsync(int id, [FromBody] FootballTeamRequestDto request)
         {
             if (id < 0)
             {
                 return BadRequest("Id should be positive number!");
             }
 
-            FootballTeam team = await _service.DeleteAsync(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var team = await _service.UpdateAsync(id, request);
+
+            if (team == null)
+            {
+                return NotFound("Team is not found!");
+            }
+
+            return Ok(team);
+        }
+
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<FootballTeamResponseDto>> DeleteAsync(int id)
+        {
+            if (id < 0)
+            {
+                return BadRequest("Id should be positive number!");
+            }
+
+            var team = await _service.DeleteAsync(id);
 
             if (team == null) 
             {

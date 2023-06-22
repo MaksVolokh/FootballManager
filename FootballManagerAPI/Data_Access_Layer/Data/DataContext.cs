@@ -1,13 +1,16 @@
 ﻿using FootballManagerAPI.Controllers.Entities;
+using FootballManagerBLL.Dto;
 using FootballManagerDAL.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 
+
 namespace FootballManagerAPI.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<ApplicationUser>
     {
+        public DataContext(){ }
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
         public DbSet<FootballPlayer> FootballPlayers{ get; set; }
         public DbSet<Coach> CoachForTeam { get; set; }
@@ -15,6 +18,7 @@ namespace FootballManagerAPI.Data
         public DbSet<FootballPlayerStatistics> PlayerStatistics { get; set; }
         public DbSet<FootballMatch> FootballMatches { get; set; }
         public DbSet<Media> Medias { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -40,11 +44,6 @@ namespace FootballManagerAPI.Data
                 .HasOne(m => m.Team)
                 .WithOne()
                 .HasForeignKey<FootballMatch>(s => s.TeamId);
-
-            modelBuilder.Entity<Media>()
-                .HasOne(m => m.FootballTeam)
-                .WithOne()
-                .HasForeignKey<FootballTeam>(s => s.MediaId);
 
         }
     }

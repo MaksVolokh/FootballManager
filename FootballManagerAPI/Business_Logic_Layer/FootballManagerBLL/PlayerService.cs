@@ -1,4 +1,6 @@
-﻿using FootballManagerAPI.Controllers.Entities;
+﻿using FootballManagerBLL.Dto.ConverterDto.FootballPlayerConverter;
+using FootballManagerBLL.Dto.RequestDto.Player;
+using FootballManagerBLL.Dto.ResponceDto.Player;
 using FootballManagerBLL.Interfaces;
 using FootballManagerDAL.Interfaces;
 
@@ -13,66 +15,94 @@ namespace FootballManagerBLL.FootballManagerBLL
             _repository = repository;
         }
 
-        public async Task<List<FootballPlayer>> GetAsync()
+        public async Task<List<FootballPlayerResponseDto>> GetAsync()
         {
-            return await _repository.GetAsync();
+            var players = await _repository.GetAsync();
+
+            return players.Select(FootballPlayerConverter.ConvertToDto).ToList();
         }
 
-        public async Task<FootballPlayer>? GetByIdAsync(int id)
+        public async Task<FootballPlayerResponseDto>? GetByIdAsync(int id)
         {
-            return await _repository.GetByIdAsync(id);
+            var player = await _repository.GetByIdAsync(id);
+
+            return FootballPlayerConverter.ConvertToDto(player);
         }
 
-        public async Task<List<FootballPlayer>> GetByFirstNameAsync(string firstName)
+        public async Task<List<FootballPlayerResponseDto>> GetByFirstNameAsync(string firstName)
         {
-            return await _repository.GetByFirstNameAsync(firstName);
+            var players = await _repository.GetByFirstNameAsync(firstName);
+
+            return players.Select(FootballPlayerConverter.ConvertToDto).ToList();
         }
 
-        public async Task<List<FootballPlayer>> GetByLastNameAsync(string lastName)
+        public async Task<List<FootballPlayerResponseDto>> GetByLastNameAsync(string lastName)
         {
-            return await _repository.GetByLastNameAsync(lastName);
+            var players = await _repository.GetByLastNameAsync(lastName);
+
+            return players.Select(FootballPlayerConverter.ConvertToDto).ToList();
         }
 
-        public async Task<FootballPlayer>? AddAsync(FootballPlayer player)
+        public async Task<FootballPlayerResponseDto>? AddAsync(FootballPlayerRequestDto requestDto)
         {
-            return await _repository.AddAsync(player);
+            var player = FootballPlayerConverter.ConvertToEntity(requestDto);
+
+            var addPlayer = await _repository.AddAsync(player);
+
+            return FootballPlayerConverter.ConvertToDto(addPlayer);
         }
 
-        public async Task<FootballPlayer>? UpdateAsync(FootballPlayer request)
+        public async Task<FootballPlayerResponseDto>? UpdateAsync(int id, FootballPlayerRequestDto requestDto)
         {
-            FootballPlayer? player = await _repository.GetByIdAsync(request.Id);
+            var player = await _repository.GetByIdAsync(id);
 
             if (player == null)
             {
                 return null;
             }
 
-            return await _repository.UpdateAsync(request);
+            FootballPlayerConverter.UpdateEntityFromRequest(player, requestDto);
+
+            var updatedPlayer = await _repository.UpdateAsync(player);
+
+            return FootballPlayerConverter.ConvertToDto(updatedPlayer);
         }
 
-        public async Task<FootballPlayer>? PatchUpdateAsync(FootballPlayer requestPatch)
+        public async Task<FootballPlayerResponseDto>? PatchUpdateAsync(int id, FootballPlayerRequestDto requestDto)
         {
-            FootballPlayer? player = await _repository.GetByIdAsync(requestPatch.Id);
+            var player = await _repository.GetByIdAsync(id);
 
             if (player == null)
             {
                 return null;
             }
 
-            return await _repository.PatchUpdateAsync(requestPatch);
+            FootballPlayerConverter.UpdateEntityFromRequest(player, requestDto);
+
+            var patchedPlayer = await _repository.PatchUpdateAsync(player);
+
+            return FootballPlayerConverter.ConvertToDto(patchedPlayer);
         }
 
-        public async Task<FootballPlayer>? DeleteAsync(int id)
+        public async Task<FootballPlayerResponseDto>? DeleteAsync(int id)
         {
-            FootballPlayer? player = await _repository.GetByIdAsync(id);
+            var player = await _repository.GetByIdAsync(id);
 
             if (player == null)
             {
                 return null;
             }
+
             await _repository.DeleteAsync(player);
 
-            return player;
+            return FootballPlayerConverter.ConvertToDto(player);
+        }
+
+        public async Task<bool> IsPlayerNumberAvailable(int number)
+        {
+            var playerNumber = await _repository.GetPlayerByNumberAsync(number);
+
+            return playerNumber == null;
         }
     }
 
