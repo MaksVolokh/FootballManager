@@ -19,7 +19,7 @@ namespace FootballManagerAPI.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginModel model)
         {
             if (!ModelState.IsValid)
@@ -46,19 +46,28 @@ namespace FootballManagerAPI.Controllers
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("Registration")]
         public async Task<IActionResult> Registration(RegistrationModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-                
+
             model.Role = "user";
             var result = await _authService.RegisterAsync(model);
-            TempData["msg"] = result.Message;
 
-            return RedirectToAction(nameof(Registration));
+            if (result.StatusCode == 1)
+            {
+                TempData["msg"] = result.Message;
+                return RedirectToAction(nameof(Login));
+            }
+
+            else
+            {
+                TempData["msg"] = result.Message;
+                return View(model);
+            }
         }
 
         [Authorize]
@@ -75,12 +84,13 @@ namespace FootballManagerAPI.Controllers
             return View();
         }
 
+
         [Authorize]
-        [HttpPost]
+        [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
             if (!ModelState.IsValid)
-            {
+            { 
                 return View(model);
             }
 

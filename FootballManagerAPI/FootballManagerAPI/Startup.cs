@@ -45,9 +45,14 @@ namespace FootballManagerAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FootballManagerAPI", Version = "v1" });
+
+                c.UseInlineDefinitionsForEnums();
             });
 
+            services.AddControllers().AddNewtonsoftJson();
+
             services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<IPlayerService, PlayerService>();
             services.AddScoped<IPlayersRepository, PlayerRepository>();
@@ -90,6 +95,9 @@ namespace FootballManagerAPI
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=UserAuthentication}/{action=Login}/{id?}");
                 endpoints.MapControllers();
             });
         }

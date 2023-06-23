@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Password (eg. John@123)</label>
+                    <label>Password (eg. maks@123)</label>
                     <input type="password" class="form-control" asp-for="Password" />
                     <span class="text-danger" asp-validation-for="Password"></span>
 
@@ -52,9 +52,25 @@
 
                 <div class="form-group">
                     <label>Player position</label>
-                    <input type="text" class="form-control" asp-for="PlayerPosition" />
+                    <select class="form-control" asp-for="PlayerPosition">
+                        <option value="">-- Select position --</option>
+                        <option value="ST">Striker (ST)</option>
+                        <option value="CF">Centre Forward (CF)</option>
+                        <option value="SS">Second Striker (SS)</option>
+                        <option value="WG">Winger (WG)</option>
+                        <option value="AM">Attacking Midfielder (AM)</option>
+                        <option value="CM">Central Midfielder (CM)</option>
+                        <option value="DM">Defensive Midfielder (DM)</option>
+                        <option value="BBM">Box-to-Box Midfielder (BBM)</option>
+                        <option value="WM">Wide Midfielder (WM)</option>
+                        <option value="FB">Full-back (FB)</option>
+                        <option value="WB">Wing-back (WB)</option>
+                        <option value="CB">Centre-back (CB)</option>
+                        <option value="SW">Sweeper (SW)</option>
+                        <option value="LB">Libero (LB)</option>
+                        <option value="GK">Goalkeeper (GK)</option>
+                    </select>
                     <span class="text-danger" asp-validation-for="PlayerPosition"></span>
-
                 </div>
 
 

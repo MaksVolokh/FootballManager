@@ -3,18 +3,21 @@ using FootballManagerBLL.Dto;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using FootballManagerBLL.Interfaces;
+using FootballManagerDAL.Interfaces;
 
 namespace FootballManagerBLL.FootballManagerBLL
 {
     public class UserAuthenticationService : IUserAuthenticationService
     {
+        private readonly IUserRepository _userRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public UserAuthenticationService(UserManager<ApplicationUser> userManager,
+        public UserAuthenticationService(IUserRepository userRepository, UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
+            _userRepository = userRepository;
             _roleManager = roleManager;
             _signInManager = signInManager;
 
@@ -23,7 +26,7 @@ namespace FootballManagerBLL.FootballManagerBLL
         public async Task<Status> RegisterAsync(RegistrationModel model)
         {
             var status = new Status();
-            var userExists = await _userManager.FindByNameAsync(model.Username);
+            var userExists = await _userRepository.GetUserByUsernameAsync(model.Username);
 
             if (userExists != null)
             {
@@ -43,9 +46,9 @@ namespace FootballManagerBLL.FootballManagerBLL
                 PhoneNumberConfirmed = true
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userRepository.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+            if (!result)
             {
                 status.StatusCode = 0;
                 status.Message = "User creation failed!";
@@ -59,7 +62,7 @@ namespace FootballManagerBLL.FootballManagerBLL
 
             if (await _roleManager.RoleExistsAsync(model.Role))
             {
-                await _userManager.AddToRoleAsync(user, model.Role);
+                await _userRepository.AddUserToRoleAsync(user, model.Role);
             }
 
             status.StatusCode = 1;
@@ -72,7 +75,7 @@ namespace FootballManagerBLL.FootballManagerBLL
         public async Task<Status> LoginAsync(LoginModel model)
         {
             var status = new Status();
-            var user = await _userManager.FindByNameAsync(model.Username);
+            var user = await _userRepository.GetUserByUsernameAsync(model.Username);
 
             if (user == null)
             {
@@ -81,7 +84,7 @@ namespace FootballManagerBLL.FootballManagerBLL
                 return status;
             }
 
-            if (!await _userManager.CheckPasswordAsync(user, model.Password))
+            if (!await _userRepository.CheckPasswordAsync(user, model.Password))
             {
                 status.StatusCode = 0;
                 status.Message = "Invalid Password!";
@@ -132,7 +135,7 @@ namespace FootballManagerBLL.FootballManagerBLL
         public async Task<Status> ChangePasswordAsync(ChangePasswordModel model, string username)
         {
             var status = new Status();
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userRepository.GetUserByUsernameAsync(username);
 
             if (user == null)
             {
@@ -141,9 +144,9 @@ namespace FootballManagerBLL.FootballManagerBLL
                 return status;
             }
 
-            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            var result = await _userRepository.ChangePasswordAsync(user, model.NewPassword);
 
-            if (result.Succeeded)
+            if (result)
             {
                 status.Message = "Password has updated successfully!";
                 status.StatusCode = 1;
