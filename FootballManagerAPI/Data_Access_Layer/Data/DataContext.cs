@@ -18,6 +18,9 @@ namespace FootballManagerAPI.Data
         public DbSet<FootballPlayerStatistics> PlayerStatistics { get; set; }
         public DbSet<FootballMatch> FootballMatches { get; set; }
         public DbSet<Media> Medias { get; set; }
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<ChatUser> ChatUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +47,9 @@ namespace FootballManagerAPI.Data
                 .HasOne(m => m.Team)
                 .WithOne()
                 .HasForeignKey<FootballMatch>(s => s.TeamId);
+
+            modelBuilder.Entity<ChatUser>()
+                .HasKey(x => new { x.ChatId, x.UserId });
 
         }
     }

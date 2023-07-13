@@ -20,6 +20,7 @@ namespace FootballManagerAPI.Controllers
 
 
         [HttpPost("Login")]
+        [Produces("application/json")]
         public async Task<IActionResult> Login(LoginModel model)
         {
             if (!ModelState.IsValid)
@@ -47,6 +48,7 @@ namespace FootballManagerAPI.Controllers
         }
 
         [HttpPost("Registration")]
+        [Produces("application/json")]
         public async Task<IActionResult> Registration(RegistrationModel model)
         {
             if (!ModelState.IsValid)
@@ -87,6 +89,7 @@ namespace FootballManagerAPI.Controllers
 
         [Authorize]
         [HttpPost("ChangePassword")]
+        [Produces("application/json")]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
             if (!ModelState.IsValid)

@@ -123,6 +123,43 @@ namespace FootballManagerAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("FootballManagerDAL.Entities.Chat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Chats");
+                });
+
+            modelBuilder.Entity("FootballManagerDAL.Entities.ChatUser", b =>
+                {
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.HasKey("ChatId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatUsers");
+                });
+
             modelBuilder.Entity("FootballManagerDAL.Entities.Coach", b =>
                 {
                     b.Property<int>("Id")
@@ -255,6 +292,33 @@ namespace FootballManagerAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Medias");
+                });
+
+            modelBuilder.Entity("FootballManagerDAL.Entities.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -399,6 +463,25 @@ namespace FootballManagerAPI.Migrations
                     b.Navigation("FootballTeam");
                 });
 
+            modelBuilder.Entity("FootballManagerDAL.Entities.ChatUser", b =>
+                {
+                    b.HasOne("FootballManagerDAL.Entities.Chat", "Chat")
+                        .WithMany("Users")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FootballManagerBLL.Dto.ApplicationUser", "User")
+                        .WithMany("Chats")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("FootballManagerDAL.Entities.FootballMatch", b =>
                 {
                     b.HasOne("FootballManagerDAL.Entities.FootballTeam", "Team")
@@ -434,6 +517,17 @@ namespace FootballManagerAPI.Migrations
                     b.Navigation("Coach");
 
                     b.Navigation("Match");
+                });
+
+            modelBuilder.Entity("FootballManagerDAL.Entities.Message", b =>
+                {
+                    b.HasOne("FootballManagerDAL.Entities.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -485,6 +579,18 @@ namespace FootballManagerAPI.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FootballManagerBLL.Dto.ApplicationUser", b =>
+                {
+                    b.Navigation("Chats");
+                });
+
+            modelBuilder.Entity("FootballManagerDAL.Entities.Chat", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("FootballManagerDAL.Entities.Coach", b =>

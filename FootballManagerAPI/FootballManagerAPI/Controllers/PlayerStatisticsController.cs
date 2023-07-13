@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using FootballManagerBLL.Dto.ResponceDto.PlayerStatistics;
+using Microsoft.Extensions.Localization;
 
 namespace FootballManagerAPI.Controllers
 {
@@ -11,9 +12,11 @@ namespace FootballManagerAPI.Controllers
     public class PlayerStatisticsController : Controller
     {
         private readonly IStatisticsService _service;
-        public PlayerStatisticsController(IStatisticsService service)
+        private readonly IStringLocalizer<PlayerStatisticsController> _localizer;
+        public PlayerStatisticsController(IStatisticsService service, IStringLocalizer<PlayerStatisticsController> localizer)
         {
             _service = service;
+            _localizer = localizer;
         }
 
         [HttpGet]
@@ -23,7 +26,7 @@ namespace FootballManagerAPI.Controllers
 
             if (playerStats.Count == 0)
             {
-                return NotFound("Stats is not found!");
+                return NotFound(_localizer["Stats not found!"]);
             }
 
             return Ok(playerStats);
@@ -35,14 +38,14 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest(_localizer["Invalid Id!"]);
             }
 
             var playerStatistics = await _service.GetByIdAsync(id);
 
             if (playerStatistics == null)
             {
-                return NotFound("Stats is not found!");
+                return NotFound(_localizer["Stats not found!"]);
             }
 
             return Ok(playerStatistics);
@@ -59,7 +62,7 @@ namespace FootballManagerAPI.Controllers
 
             if (addedStats == null)
             {
-                return BadRequest("Failed to add stats!");
+                return BadRequest(_localizer["Failed to add stats!"]);
             }
 
             return Ok(addedStats);
@@ -70,7 +73,7 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest("Invalid Id!");
             }
 
             if (!ModelState.IsValid)
@@ -82,7 +85,7 @@ namespace FootballManagerAPI.Controllers
 
             if (playerStatistics == null)
             {
-                return NotFound("Stats is not found!");
+                return NotFound(_localizer["Stats not found!"]);
             }
 
             return Ok(playerStatistics);
@@ -93,13 +96,13 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest(_localizer["Invalid Id!"]);
             }
             var stats = _service.DeleteAsync(id);
 
             if (stats == null)
             {
-                return NotFound("Stats is not found!");
+                return NotFound(_localizer["Stats not found!"]);
             }
 
             return NoContent();

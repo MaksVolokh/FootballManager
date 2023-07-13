@@ -2,6 +2,7 @@
 using FootballManagerBLL.Dto.ResponceDto.Match;
 using FootballManagerBLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,9 +13,11 @@ namespace FootballManagerAPI.Controllers
     public class MatchController : Controller
     {
         private readonly IMatchService _service;
-        public MatchController(IMatchService service)
+        private readonly IStringLocalizer<MatchController> _localizer;
+        public MatchController(IMatchService service, IStringLocalizer<MatchController> localizer)
         {
             _service = service;
+            _localizer = localizer;
         }
 
         [HttpGet]
@@ -24,7 +27,7 @@ namespace FootballManagerAPI.Controllers
 
             if (matches.Count == 0)
             {
-                return NotFound("Matches is not found!");
+                return NotFound(_localizer["Matches not found!"]);
             }
 
             return Ok(matches);
@@ -35,14 +38,14 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest(_localizer["Invalid Id"]);
             }
 
             var match = await _service.GetByIdAsync(id);
 
             if (match == null)
             {
-                return NotFound("Match is not found!");
+                return NotFound(_localizer["Match not found!"]);
             }
 
             return Ok(match);
@@ -60,7 +63,7 @@ namespace FootballManagerAPI.Controllers
 
             if (addedMatch == null)
             {
-                return BadRequest("Failed to add match!");
+                return BadRequest(_localizer["Failed to add match!"]);
             }
 
             return Ok(addedMatch);
@@ -71,7 +74,7 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest(_localizer["Invalid Id"]);
             }
 
             if (!ModelState.IsValid)
@@ -83,7 +86,7 @@ namespace FootballManagerAPI.Controllers
 
             if (match == null)
             {
-                return NotFound("Match is not found!");
+                return NotFound(_localizer["Match not found!"]);
             }
 
             return Ok(match);
@@ -94,13 +97,13 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest(_localizer["Invalid Id"]);
             }
             var match = _service.DeleteAsync(id);
 
             if (match == null)
             {
-                return NotFound("Match is not found!");
+                return NotFound(_localizer["Match not found!"]);
             }
 
             return NoContent();

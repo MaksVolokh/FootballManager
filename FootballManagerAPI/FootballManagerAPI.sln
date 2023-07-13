@@ -5,9 +5,9 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballManagerAPI", "FootballManagerAPI\FootballManagerAPI.csproj", "{06253617-DC5F-4C2D-B469-2C254EF9C1B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballManagerBLL", "Business_Logic_Layer\FootballManagerBLL.csproj", "{F76A6E33-9E0E-4D84-9A42-C50482627EC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballManagerBLL", "Business_Logic_Layer\FootballManagerBLL.csproj", "{F76A6E33-9E0E-4D84-9A42-C50482627EC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballManagerDAL", "Data_Access_Layer\FootballManagerDAL.csproj", "{A7D12302-FFF8-4C9F-854E-1B2884734777}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FootballManagerDAL", "Data_Access_Layer\FootballManagerDAL.csproj", "{A7D12302-FFF8-4C9F-854E-1B2884734777}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

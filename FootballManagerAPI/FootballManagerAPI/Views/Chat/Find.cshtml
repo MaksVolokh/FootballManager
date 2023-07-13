@@ -1,0 +1,11 @@
+﻿@using FootballManagerDAL.Entities
+@model IEnumerable<ChatUser>
+
+@foreach (var user in Model)
+{
+    <div>
+        <a asp-controller="Chat" asp-action="CreatePrivateRoomAsync" asp-route-userId="@user.UserId">
+            @user.User
+        </a>
+    </div>
+}

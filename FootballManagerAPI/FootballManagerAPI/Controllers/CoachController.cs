@@ -2,6 +2,7 @@
 using FootballManagerBLL.Dto.ResponceDto.Coach;
 using FootballManagerBLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,9 +13,11 @@ namespace FootballManagerAPI.Controllers
     public class CoachController : ControllerBase
     {
         private readonly ICoachService _service;
-        public CoachController(ICoachService service)
+        private readonly IStringLocalizer<CoachController> _localizer;
+        public CoachController(ICoachService service, IStringLocalizer<CoachController> localizer)
         {
             _service = service;
+            _localizer = localizer;
         }
 
 
@@ -25,7 +28,7 @@ namespace FootballManagerAPI.Controllers
 
             if (coaches.Count == 0)
             {
-                return NotFound("Coach is not found!");
+                return NotFound(_localizer["Coaches not found!"]);
             }
 
             return Ok(coaches);
@@ -37,14 +40,14 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest(_localizer["Invalid Id!"]);
             }
 
             var coach = await _service.GetByIdAsync(id);
 
             if (coach == null)
             {
-                return NotFound("Coach is not found!");
+                return NotFound(_localizer["Coach not found!"]);
             }
 
             return Ok(coach);
@@ -56,14 +59,14 @@ namespace FootballManagerAPI.Controllers
         {
             if (string.IsNullOrEmpty(firstName))
             {
-                return BadRequest("First name should not be empty!");
+                return BadRequest(_localizer["First name should not be empty!"]);
             }
 
             var coach = await _service.GetByFirstNameAsync(firstName);
 
             if (coach == null)
             {
-                return NotFound("Coach is not found!");
+                return NotFound(_localizer["Coach not found!"]);
             }
 
             return Ok(coach);
@@ -75,14 +78,14 @@ namespace FootballManagerAPI.Controllers
         {
             if (string.IsNullOrEmpty(lastName))
             {
-                return BadRequest("Last name should not be empty!");
+                return BadRequest(_localizer["Last name should not be empty!"]);
             }
 
             var coach = await _service.GetByLastNameAsync(lastName);
 
             if (coach == null)
             {
-                return NotFound("Coach is not found!");
+                return NotFound(_localizer["Coach not found!"]);
             }
 
             return Ok(coach);
@@ -101,7 +104,7 @@ namespace FootballManagerAPI.Controllers
 
             if (addedCoach == null)
             {
-                return BadRequest("Failed to add coach!");
+                return BadRequest(_localizer["Failed to add coach!"]);
             }
 
             return Ok(addedCoach);
@@ -113,7 +116,7 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest(_localizer["Invalid Id!"]);
             }
 
             if (!ModelState.IsValid)
@@ -125,7 +128,7 @@ namespace FootballManagerAPI.Controllers
 
             if (coach == null)
             {
-                return NotFound("Coach is not found!");
+                return NotFound(_localizer["Coach not found!"]);
             }
 
             return Ok(coach);
@@ -137,7 +140,7 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest(_localizer["Invalid Id!"]);
             }
 
             if (!ModelState.IsValid)
@@ -149,7 +152,7 @@ namespace FootballManagerAPI.Controllers
 
             if (coach == null)
             {
-                return NotFound("Coach is not found!");
+                return NotFound(_localizer["Coach not found!"]);
             }
 
             return Ok(coach);
@@ -161,14 +164,14 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest(_localizer["Invalid Id!"]);
             }
 
             var coach = await _service.DeleteAsync(id);
 
             if (coach == null)
             {
-                return NotFound("Coach is not found!");
+                return NotFound(_localizer["Coach not found!"]);
             }
 
             return NoContent();

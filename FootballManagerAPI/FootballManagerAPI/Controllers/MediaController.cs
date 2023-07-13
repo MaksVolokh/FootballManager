@@ -4,6 +4,7 @@ using FootballManagerBLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.Extensions.Localization;
 
 namespace FootballManagerAPI.Controllers
 {
@@ -12,9 +13,11 @@ namespace FootballManagerAPI.Controllers
     public class MediaController : Controller
     {
         private readonly IMediaService _service;
-        public MediaController(IMediaService service)
+        private readonly IStringLocalizer<MediaController> _localizer;
+        public MediaController(IMediaService service, IStringLocalizer<MediaController> localizer)
         {
             _service = service;
+            _localizer = localizer;
         }
 
         [HttpGet]
@@ -24,7 +27,7 @@ namespace FootballManagerAPI.Controllers
 
             if (medias.Count == 0)
             {
-                return NotFound("Media is not found!");
+                return NotFound(_localizer["Medias not found!"]);
             }
 
             return Ok(medias);
@@ -35,14 +38,14 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest(_localizer["Invalid Id!"]);
             }
 
             var media = await _service.GetByIdAsync(id);
 
             if (media == null)
             {
-                return NotFound("Media is not found!");
+                return NotFound(_localizer["Media not found!"]);
             }
 
             return Ok(media);
@@ -60,7 +63,7 @@ namespace FootballManagerAPI.Controllers
 
             if (addedVideo == null)
             {
-                return BadRequest("Failed to add video!");
+                return BadRequest(_localizer["Failed to add video!"]);
             }
 
             return Ok(addedVideo);
@@ -78,7 +81,7 @@ namespace FootballManagerAPI.Controllers
 
             if (addedPhoto == null)
             {
-                return BadRequest("Failed to add photo!");
+                return BadRequest(_localizer["Failed to add photo!"]);
             }
 
             return Ok(addedPhoto);
@@ -89,7 +92,7 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest(_localizer["Invalid Id!"]);
             }
 
             if (!ModelState.IsValid)
@@ -101,7 +104,7 @@ namespace FootballManagerAPI.Controllers
 
             if (media == null)
             {
-                return NotFound("Video is not found!");
+                return NotFound(_localizer["Video not found!"]);
             }
 
             return Ok(media);
@@ -112,7 +115,7 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest(_localizer["Invalid Id!"]);
             }
 
             if (!ModelState.IsValid)
@@ -124,7 +127,7 @@ namespace FootballManagerAPI.Controllers
 
             if (media == null)
             {
-                return NotFound("Photo is not found!");
+                return NotFound(_localizer["Photo not found!"]);
             }
 
             return Ok(media);
@@ -135,14 +138,14 @@ namespace FootballManagerAPI.Controllers
         {
             if (id < 0)
             {
-                return BadRequest("Id should be positive number!");
+                return BadRequest(_localizer["Invalid Id!"]);
             }
 
             var media = await _service.DeleteMediaAsync(id);
 
             if (media == null)
             {
-                return NotFound("Media is not found!");
+                return NotFound(_localizer["Media not found!"]);
             }
 
             return NoContent();

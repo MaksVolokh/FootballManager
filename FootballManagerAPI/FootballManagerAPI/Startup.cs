@@ -12,6 +12,10 @@ using FootballManagerBLL.FootballManagerBLL;
 using FootballManagerDAL.Repositories;
 using Microsoft.AspNetCore.Identity;
 using FootballManagerBLL.Dto;
+using FootballManagerAPI.Hubs;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace FootballManagerAPI
 {
@@ -24,16 +28,36 @@ namespace FootballManagerAPI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
             services.AddControllers();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddDbContext<DataContext>(options => 
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddControllersWithViews()
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
+
+            services.AddLocalization(options =>
+            {
+                options.ResourcesPath = "Resources";
+            });
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("uk-UA"), 
+                    new CultureInfo("en-US")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture("en-US");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<DataContext>()
@@ -50,6 +74,8 @@ namespace FootballManagerAPI
             });
 
             services.AddControllers().AddNewtonsoftJson();
+
+            services.AddSignalR();
 
             services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
             services.AddScoped<IUserRepository, UserRepository>();
@@ -70,12 +96,14 @@ namespace FootballManagerAPI
             services.AddScoped<IFootballMatchRepository, FootballMatchRepository>();
 
             services.AddScoped<IMediaService, MediaService>();
-            services.AddScoped<IMediaRepository,  MediaRepository>();
+            services.AddScoped<IMediaRepository, MediaRepository>();
 
-            services.AddMvc();
+            services.AddScoped<IChatRepository, ChatRepository>();
+            services.AddScoped<IChatService, ChatService>();
+
+            services.AddMvc().AddNewtonsoftJson();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -87,19 +115,30 @@ namespace FootballManagerAPI
 
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseAuthentication();
 
             app.UseAuthorization();
 
+            app.UseRequestLocalization();
+
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ChatHub>("/chatHub"); 
+           
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=UserAuthentication}/{action=Login}/{id?}");
+
+                endpoints.MapControllerRoute(
+                    name: "chat",
+                    pattern: "{controller=Chat}/{action=Index}/{id?}");
                 endpoints.MapControllers();
             });
+
         }
     }
 }
