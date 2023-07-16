@@ -2,6 +2,8 @@
 using FootballManagerBLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FootballManagerAPI.Controllers
@@ -9,9 +11,11 @@ namespace FootballManagerAPI.Controllers
     public class UserAuthenticationController : Controller
     {
         private readonly IUserAuthenticationService _authService;
-        public UserAuthenticationController(IUserAuthenticationService  authServise)
+        private readonly IStringLocalizer<UserAuthenticationController> _localizer;
+        public UserAuthenticationController(IUserAuthenticationService  authServise, IStringLocalizer<UserAuthenticationController> localizer)
         {
             _authService = authServise;
+            _localizer = localizer;
         }
         public IActionResult Login()
         {
@@ -25,7 +29,8 @@ namespace FootballManagerAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
+                return BadRequest(new { errors });
             }
                 
             var result = await _authService.LoginAsync(model);

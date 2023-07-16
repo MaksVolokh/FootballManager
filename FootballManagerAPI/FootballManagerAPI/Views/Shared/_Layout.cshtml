@@ -8,8 +8,7 @@
     <title>ChatApp</title>
 
     <link rel="stylesheet" href="~/css/site.css">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.50.0/swagger-ui.css" />
-    
+
     @RenderSection("Styles", required: false)
 </head>
 
@@ -44,28 +43,8 @@
         </form>
     </div>
 
-    <div id="swagger-ui"></div>
-
     <script src="~/js/site.js"></script>
     @RenderSection("Scripts", required: false)
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.50.0/swagger-ui-bundle.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.50.0/swagger-ui-standalone-preset.js"></script>
-
-    <script>
-
-        document.addEventListener('DOMContentLoaded', function () {
-            
-            const ui = SwaggerUIBundle({
-                url: "https://localhost:44374/swagger/v1/swagger.json",
-                dom_id: '#swagger-ui',
-                deepLinking: true,
-                presets: [SwaggerUIBundle.presets.apis],
-                plugins: [SwaggerUIBundle.plugins.DownloadUrl],
-                layout: "StandaloneLayout"
-            });
-        });
-    </script>
 
 </body>
 

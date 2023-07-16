@@ -1,87 +1,146 @@
-﻿@model FootballManagerBLL.Dto.UserDto.LoginModel
-@{
-    Layout = null;
-}
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
+    <title>Login</title>
 
     <style>
-
-        form {
-            border: 3px solid #f1f1f1;
-            width: 60%;
-            margin: auto;
-            margin-top: 10%;
+        body {
+            background-color: grey;
+            font-family: Arial, sans-serif;
         }
 
-        input[type=text], input[type=password] {
+        .container {
+            border: 3px solid #f1f1f1;
+            width: 60%;
+            margin: 10% auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-image: url("/images/log.jpg");
+            background-size: cover;
+        }
+
+        h1 {
+            text-align: center;
+            color: black;
+        }
+
+        label[for="Username"],
+        label[for="Password"] {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: white;
+        }
+
+        input[type=text],
+        input[type=password] {
             width: 100%;
             padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
+            margin-bottom: 10px;
             border: 1px solid #ccc;
             box-sizing: border-box;
         }
 
-        button {
-            background-color: #aa048b;
-            color: yellow;
+        .error-message {
+            color: red;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
+        button[type=submit] {
+            background-color: #00ff00;
+            color: #ffffff;
             padding: 14px 20px;
-            margin: 8px 0;
+            margin-top: 10px;
             border: none;
             cursor: pointer;
             width: 100%;
+            font-weight: bold;
         }
 
-        .container {
-            padding: 16px;
+        .signup-link {
+            display: block;
+            text-align: center;
+            color: #333333;
+            margin-top: 10px;
+            text-decoration: none;
         }
 
-        .msg {
-            padding: 0px;
+        .signup-link:hover {
+            text-decoration: underline;
         }
 
+        .language-selector {
+            text-align: right;
+            margin-top: -30px;
+        }
 
-        .err {
-            color: red;
+        .language-selector button {
+            margin-left: 10px;
+            padding: 12px 20px; 
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: transparent; 
+        }
+
+        .language-selector button:nth-child(1) {
+            background-image: url("https://cdn.countryflags.com/thumbs/united-kingdom/flag-3d-250.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            color: white; 
+            background-size: contain;
+            text-indent: -9999px;
+        }
+
+        .language-selector button:nth-child(2) {
+            background-image: url("https://cdn.countryflags.com/thumbs/ukraine/flag-3d-250.png");
+            background-repeat: no-repeat;
+            background-position: center;
+            color: white; 
+            background-size: contain;
+            text-indent: -9999px;
         }
     </style>
-
 </head>
 <body>
+    <div class="container">
+        <div class="language-selector">
+            <button onclick="changeLanguage('en')">English</button>
+            <button onclick="changeLanguage('uk')">Українська</button>
+        </div>
+        <h1>Login</h1>
 
-    <form asp-action="Login" method="post">
+        <form asp-action="Login" method="post">
+            <label asp-for="Username" style="color: white;">Username</label> 
+            <input type="text" asp-for="Username" placeholder="Enter username">
+            <span asp-validation-for="Username" class="error-message"></span>
 
-        <div class="container">
-            <label asp-for="Username"><b>Username</b></label>
-            <input type="text" asp-for="Username" placeholder="Enter Username">
-            <div class="msg">
-                <span class="err" asp-validation-for="Username"></span>
-            </div>
-
-
-
-            <label asp-for="Password"><b>Password</b></label>
-            <input type="password" asp-for="Password" placeholder="Enter Password">
-            <div class="msg">
-                <span asp-validation-for="Password" class="err"></span>
-            </div>
-
+            <label asp-for="Password" style="color: white;">Password</label> 
+            <input type="password" asp-for="Password" placeholder="Enter password">
+            <span asp-validation-for="Password" class="error-message"></span>
 
             @if (TempData["msg"] != null)
             {
-                <div class="msg">@TempData["msg"]</div>
+                <div class="error-message">@TempData["msg"]</div>
             }
 
             <button type="submit">Login</button>
-            <a class="text-alert" href="/UserAuthentication/Registration">Not a user? Signup</a>
-        </div>
-    </form>
+        </form>
 
+        <a class="signup-link" href="/UserAuthentication/Registration">Not a user? Sign up</a>
+    </div>
+
+    <script>
+        function changeLanguage(language) {
+            var url = new URL(window.location.href);
+            url.searchParams.set('lang', language);
+            window.location.href = url.toString();
+        }
+    </script>
 </body>
 </html>
